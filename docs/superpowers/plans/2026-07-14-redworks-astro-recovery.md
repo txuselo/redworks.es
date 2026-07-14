@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- All commands run via `docker compose run --rm app <command>` (or `exec` once the service is up) — the host has no Node.js runtime. (Playwright in Task L is the one documented exception and runs on the host.)
+- All commands run via `docker compose run --rm app <command>` (or `exec` once the service is up) — the host has no Node.js runtime. (Playwright in Task 12 is the one documented exception and runs on the host.)
 - Every content page must be prerendered (`export const prerender = true`); only `src/pages/api/contact.ts` is SSR.
 - Keep the original URL slugs (`/electricidad/`, `/telefonia-voip/`, etc.) exactly as they were on `redworks.com.es` to preserve existing SEO/backlinks.
 - No secrets committed to the repo. `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL` are Cloudflare Worker secrets configured later by the user, not in code.
@@ -43,7 +43,7 @@ This is the exact set of snapshots verified during design to contain full conten
 
 ---
 
-### Task A: Project scaffold, Docker dev environment, Cloudflare adapter
+### Task 1: Project scaffold, Docker dev environment, Cloudflare adapter
 
 **Files:**
 - Create: `package.json`
@@ -54,7 +54,7 @@ This is the exact set of snapshots verified during design to contain full conten
 - Create: `docker-compose.yml`
 - Create: `.dockerignore`
 - Create: `.gitignore`
-- Create: `src/pages/index.astro` (temporary placeholder, replaced in Task H)
+- Create: `src/pages/index.astro` (temporary placeholder, replaced in Task 8)
 - Create: `public/robots.txt`
 
 **Interfaces:**
@@ -209,7 +209,7 @@ git commit -m "Scaffold Astro project with Cloudflare adapter and Docker dev env
 
 ---
 
-### Task B: Design tokens, base Layout, Header, Footer
+### Task 2: Design tokens, base Layout, Header, Footer
 
 **Files:**
 - Create: `src/styles/global.css`
@@ -220,8 +220,8 @@ git commit -m "Scaffold Astro project with Cloudflare adapter and Docker dev env
 
 **Interfaces:**
 - Produces: `Layout.astro` — props `{ title: string; description: string }`, renders `<slot />` between Header and Footer, imports `global.css`.
-- Produces: `NAV_ITEMS` real Spanish nav labels/hrefs, hardcoded in `Header.astro` for now (Task G will replace the services sublist with data pulled from the `services` collection once it exists).
-- Consumes (Task G onward): nothing yet — this task hardcodes the 12 service nav links since the collection doesn't exist until Task F.
+- Produces: `NAV_ITEMS` real Spanish nav labels/hrefs, hardcoded in `Header.astro` for now (Task 7 will replace the services sublist with data pulled from the `services` collection once it exists).
+- Consumes (Task 7 onward): nothing yet — this task hardcodes the 12 service nav links since the collection doesn't exist until Task 6.
 
 - [ ] **Step 1: Write global design tokens**
 
@@ -463,7 +463,7 @@ git commit -m "Add design tokens, base Layout, Header and Footer"
 
 ---
 
-### Task C: `services` content collection schema
+### Task 3: `services` content collection schema
 
 **Files:**
 - Create: `src/content/config.ts`
@@ -484,7 +484,7 @@ git commit -m "Add design tokens, base Layout, Header and Footer"
     whyChooseUs: { icon: string; title: string; body: string }[]; // exactly 3
   }
   ```
-- Consumes (Task F, G): this schema is what `fetch-services.mjs` must produce YAML matching, and what `[slug].astro` reads via `getCollection('services')`.
+- Consumes (Task 6, G): this schema is what `fetch-services.mjs` must produce YAML matching, and what `[slug].astro` reads via `getCollection('services')`.
 
 - [ ] **Step 1: Write the failing schema test**
 
@@ -618,7 +618,7 @@ git commit -m "Add services/pages content collection schemas"
 
 ---
 
-### Task D: Elementor service-page parser (extraction logic + fixture test)
+### Task 4: Elementor service-page parser (extraction logic + fixture test)
 
 **Files:**
 - Create: `scripts/parse-service-page.mjs`
@@ -627,7 +627,7 @@ git commit -m "Add services/pages content collection schemas"
 
 **Interfaces:**
 - Produces: `parseServicePage(html: string): { title, metaDescription, heroImage, heroTitle, sections: {heading, body, imageSrc?}[], whyChooseUs: {icon, title, body}[] }` and `mapIcon(faClass: string): string`, both exported from `scripts/parse-service-page.mjs`.
-- Consumes (Task F): `fetch-services.mjs` imports both functions.
+- Consumes (Task 6): `fetch-services.mjs` imports both functions.
 
 - [ ] **Step 1: Download the real fixture (byte-identical Wayback snapshot)**
 
@@ -722,7 +722,7 @@ Expected: FAIL with "Cannot find module './parse-service-page.mjs'".
 ```js
 import * as cheerio from 'cheerio';
 
-// Keep this list in exact sync with the keys implemented in src/components/Icon.astro (Task G) —
+// Keep this list in exact sync with the keys implemented in src/components/Icon.astro (Task 7) —
 // anything else Wayback throws at us (e.g. the real "fa-record-vinyl" on the electricidad page)
 // intentionally falls back to 'check-circle' rather than rendering a name with no matching SVG.
 const KNOWN_ICONS = ['user-tie', 'balance-scale', 'shield-alt', 'wifi', 'headset', 'sun', 'bolt', 'network-wired'];
@@ -799,7 +799,7 @@ export function parseServicePage(html) {
 - [ ] **Step 5: Run the test to verify it passes**
 
 Run: `docker compose run --rm app npm run test`
-Expected: PASS. Note the fixture test intentionally expects `check-circle` (not `record-vinyl`) for the third card — `record-vinyl` is a real Font Awesome class on the original page but isn't in our small hand-drawn icon set (Task G), so it correctly falls back.
+Expected: PASS. Note the fixture test intentionally expects `check-circle` (not `record-vinyl`) for the third card — `record-vinyl` is a real Font Awesome class on the original page but isn't in our small hand-drawn icon set (Task 7), so it correctly falls back.
 
 - [ ] **Step 6: Commit**
 
@@ -810,7 +810,7 @@ git commit -m "Add Elementor service-page parser with fixture test"
 
 ---
 
-### Task E: Shared image assets (logo, brand logos, client logos, team photos)
+### Task 5: Shared image assets (logo, brand logos, client logos, team photos)
 
 **Files:**
 - Create: `scripts/download-image.mjs`
@@ -818,7 +818,7 @@ git commit -m "Add Elementor service-page parser with fixture test"
 - Create: `scripts/fetch-shared-assets.mjs`
 
 **Interfaces:**
-- Produces: `downloadImage(waybackUrl: string, destPath: string): Promise<void>` from `download-image.mjs`, used by both this task and Task F.
+- Produces: `downloadImage(waybackUrl: string, destPath: string): Promise<void>` from `download-image.mjs`, used by both this task and Task 6.
 - Produces: on disk, `src/assets/shared/logo.svg`, `logo-white.svg`, `footer-bg.jpg`, `eu-funding-badge.png`, `digitalizador-badge.svg`, `brands/*.png|jpg` (~35 files), `clients/*.png` (18 files), `team/*.jpg` (8 files), `public/favicon-*.png`.
 
 - [ ] **Step 1: Write `scripts/download-image.mjs`**
@@ -937,7 +937,7 @@ git commit -m "Download and commit shared image assets from Wayback Machine"
 
 ---
 
-### Task F: Run the extraction for all 12 service pages
+### Task 6: Run the extraction for all 12 service pages
 
 **Files:**
 - Create: `scripts/services-manifest.mjs`
@@ -946,8 +946,8 @@ git commit -m "Download and commit shared image assets from Wayback Machine"
 - Create: `src/content/services/*/hero.jpg` and `section-*.jpg` (generated images, one subfolder per service)
 
 **Interfaces:**
-- Consumes: `parseServicePage`, `mapIcon` (Task D), `downloadImage` (Task E).
-- Produces: 12 YAML files conforming exactly to the `services` schema from Task C — this is what Task G's dynamic route reads via `getCollection('services')`.
+- Consumes: `parseServicePage`, `mapIcon` (Task 4), `downloadImage` (Task 5).
+- Produces: 12 YAML files conforming exactly to the `services` schema from Task 3 — this is what Task 7's dynamic route reads via `getCollection('services')`.
 
 - [ ] **Step 1: Write the services manifest (slug → category → nav order → Wayback URL)**
 
@@ -1030,9 +1030,9 @@ Expected: 12 lines of `Fetching ...` / `Wrote ...`, no thrown errors.
 - [ ] **Step 4: Sanity-check the generated content by hand for one file**
 
 Run: `cat src/content/services/electricidad.yaml`
-Expected: `heroTitle` reads "Empresa Instaladora de Electricidad y Energías Renovables en Madrid", `sections` has exactly 2 entries ("Electricidad", "Energía Renovable"), `whyChooseUs` has exactly 3 entries. This must match the values already verified in Task D's fixture test — if it doesn't, the live snapshot at this timestamp drifted from the fixture; re-run Step 1 of Task D with the current timestamp and diff.
+Expected: `heroTitle` reads "Empresa Instaladora de Electricidad y Energías Renovables en Madrid", `sections` has exactly 2 entries ("Electricidad", "Energía Renovable"), `whyChooseUs` has exactly 3 entries. This must match the values already verified in Task 4's fixture test — if it doesn't, the live snapshot at this timestamp drifted from the fixture; re-run Step 1 of Task 4 with the current timestamp and diff.
 
-- [ ] **Step 5: Verify the build accepts all 12 generated files against the Task C schema**
+- [ ] **Step 5: Verify the build accepts all 12 generated files against the Task 3 schema**
 
 Run: `docker compose run --rm app npm run build`
 Expected: build succeeds with no `[content-schema]` errors. If a specific field fails validation (e.g. a page had 4 why-choose-us cards instead of 3, or a missing image), fix that one YAML file or re-run the extraction for that slug — do not loosen the schema to accommodate bad data.
@@ -1046,7 +1046,7 @@ git commit -m "Extract and commit content for all 12 service pages from Wayback 
 
 ---
 
-### Task G: Service page template, shared UI components, dynamic route
+### Task 7: Service page template, shared UI components, dynamic route
 
 **Files:**
 - Create: `src/components/Hero.astro`
@@ -1060,8 +1060,8 @@ git commit -m "Extract and commit content for all 12 service pages from Wayback 
 
 **Interfaces:**
 - Produces: `ServicePage.astro` — prop `{ entry: CollectionEntry<'services'> }`.
-- Consumes: `getCollection('services')` (Task C schema, Task F data), `Layout.astro` (Task B).
-- Produces: `[slug].astro` also renders the `pages` collection (wired properly in Task I; for this task it only needs to handle `services` without breaking when Task I adds the `pages` branch — so branch on a `type` field passed via `getStaticPaths` props).
+- Consumes: `getCollection('services')` (Task 3 schema, Task 6 data), `Layout.astro` (Task 2).
+- Produces: `[slug].astro` also renders the `pages` collection (wired properly in Task 9; for this task it only needs to handle `services` without breaking when Task 9 adds the `pages` branch — so branch on a `type` field passed via `getStaticPaths` props).
 
 - [ ] **Step 1: Write `Icon.astro`**
 
@@ -1190,7 +1190,7 @@ const brands = [brand01, brand02, brand03, brand04, brand05, brand06, brand07, b
 </style>
 ```
 
-*(Only 10 representative brand logos are wired in for layout purposes — Task E downloaded all ~51; this component intentionally samples a subset for a clean strip rather than a 51-logo wall. This is a design choice, not a missed asset: nothing else references the remaining files, so note in the PR description that most downloaded brand logos are unused by the UI, kept only as recovered source material.)*
+*(Only 10 representative brand logos are wired in for layout purposes — Task 5 downloaded all ~51; this component intentionally samples a subset for a clean strip rather than a 51-logo wall. This is a design choice, not a missed asset: nothing else references the remaining files, so note in the PR description that most downloaded brand logos are unused by the UI, kept only as recovered source material.)*
 
 - [ ] **Step 6: Write `ServicePage.astro`**
 
@@ -1276,7 +1276,7 @@ describe('ServicePage', () => {
 - [ ] **Step 9: Run the test**
 
 Run: `docker compose run --rm app npm run test`
-Expected: PASS (requires Task F's generated `electricidad.yaml` to already exist).
+Expected: PASS (requires Task 6's generated `electricidad.yaml` to already exist).
 
 - [ ] **Step 10: Verify all 12 service pages build with real content**
 
@@ -1298,14 +1298,14 @@ git commit -m "Add service page template, shared UI components and dynamic route
 
 ---
 
-### Task H: Homepage
+### Task 8: Homepage
 
 **Files:**
-- Modify: `src/pages/index.astro` (replace Task A's placeholder)
+- Modify: `src/pages/index.astro` (replace Task 1's placeholder)
 - Test: `src/pages/index.test.ts`
 
 **Interfaces:**
-- Consumes: `getCollection('services')` (Task F data), `Layout`, `Hero`, `WhyChooseUs`, `CtaBand`, `BrandsStrip` (Task B/G).
+- Consumes: `getCollection('services')` (Task 6 data), `Layout`, `Hero`, `WhyChooseUs`, `CtaBand`, `BrandsStrip` (Task 2/G).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1446,7 +1446,7 @@ git commit -m "Build real homepage with service grids from the services collecti
 
 ---
 
-### Task I: Quiénes somos & Clientes (hand-authored real content, `pages` collection)
+### Task 9: Quiénes somos & Clientes (hand-authored real content, `pages` collection)
 
 **Files:**
 - Create: `src/content/pages/quienes-somos.md`
@@ -1664,7 +1664,7 @@ git commit -m "Add Quienes somos and Clientes pages with real recovered content"
 
 ---
 
-### Task J: Legal pages (Accesibilidad, Política de privacidad, Términos y condiciones)
+### Task 10: Legal pages (Accesibilidad, Política de privacidad, Términos y condiciones)
 
 **Files:**
 - Create: `src/content/pages/accesibilidad.md`
@@ -1672,7 +1672,7 @@ git commit -m "Add Quienes somos and Clientes pages with real recovered content"
 - Create: `src/content/pages/terminos-y-condiciones.md`
 
 **Interfaces:**
-- Consumes: same `pages` collection / `PageTemplate.astro` from Task I — no new component code, purely content.
+- Consumes: same `pages` collection / `PageTemplate.astro` from Task 9 — no new component code, purely content.
 
 - [ ] **Step 1: Write `src/content/pages/accesibilidad.md`**
 
@@ -1857,7 +1857,7 @@ git commit -m "Add legal pages: accesibilidad, politica de privacidad, terminos 
 
 ---
 
-### Task K: Contact page and `/api/contact` (Resend integration)
+### Task 11: Contact page and `/api/contact` (Resend integration)
 
 **Files:**
 - Create: `src/lib/contactValidation.ts`
@@ -2174,7 +2174,7 @@ Run:
 curl -s -X POST http://localhost:4321/api/contact \
   -F "name=Test" -F "email=not-an-email" -F "phone=600123456" -F "message=hola" -F "accepted=on"
 ```
-Expected: `{"ok":false,"errors":["El email no es válido."]}` — this confirms validation runs even without a real `RESEND_API_KEY` set (a real send is exercised later in Task L once secrets exist, or manually once the user configures Resend).
+Expected: `{"ok":false,"errors":["El email no es válido."]}` — this confirms validation runs even without a real `RESEND_API_KEY` set (a real send is exercised later in Task 12 once secrets exist, or manually once the user configures Resend).
 
 Run: `docker compose down`
 
@@ -2187,7 +2187,7 @@ git commit -m "Add contact page and /api/contact endpoint with Resend integratio
 
 ---
 
-### Task L: 404 page, sitemap wiring, final full-site verification
+### Task 12: 404 page, sitemap wiring, final full-site verification
 
 **Files:**
 - Create: `src/pages/404.astro`
@@ -2195,7 +2195,7 @@ git commit -m "Add contact page and /api/contact endpoint with Resend integratio
 - Modify: `package.json` (add `@astrojs/sitemap` dependency)
 
 **Interfaces:**
-- Produces: `dist/sitemap-index.xml` (referenced by `public/robots.txt` from Task A).
+- Produces: `dist/sitemap-index.xml` (referenced by `public/robots.txt` from Task 1).
 
 - [ ] **Step 1: Write `src/pages/404.astro`**
 
@@ -2334,7 +2334,7 @@ git commit -m "Add 404 page, sitemap integration, and verify full site build"
 
 ---
 
-### Task M: GitHub repository and initial push
+### Task 13: GitHub repository and initial push
 
 **Files:**
 - Create: `README.md`
