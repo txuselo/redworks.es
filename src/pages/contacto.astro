@@ -8,15 +8,16 @@ import Hero from '../components/Hero.astro';
   title="Contacto | Redworks"
   description="Contacta con Redworks Solutions para tus proyectos de telecomunicaciones y electricidad en Madrid. Llámanos al 910 52 74 99."
 >
-  <Hero title="Contacta con nosotros">
+  <Hero title="Contacta con nosotros" eyebrow="Presupuesto sin compromiso">
     ¿Tienes un proyecto de telecomunicaciones, electricidad o energías renovables? Cuéntanos qué necesitas.
   </Hero>
 
   <section class="container contact-grid">
     <div class="contact-info">
-      <h2>Nuestros datos</h2>
-      <p><a href="tel:+34910527499">910 52 74 99</a></p>
-      <p>Calle José Echegaray, 14<br />Edificio A2, planta 2, nave 8</p>
+      <p class="label">Llámanos</p>
+      <p class="value"><a href="tel:+34910527499">910 52 74 99</a></p>
+      <p class="label">Dirección</p>
+      <p class="value">Calle José Echegaray, 14<br />Edificio A2, planta 2, nave 8</p>
     </div>
 
     <form id="contact-form" method="POST" action="/api/contact">
@@ -52,16 +53,34 @@ import Hero from '../components/Hero.astro';
     gap: 3rem;
     padding: 3rem 0;
   }
+  .contact-info .label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 1.25rem 0 0.2rem;
+  }
+  .contact-info .label:first-child {
+    margin-top: 0;
+  }
+  .contact-info .value {
+    margin: 0;
+  }
   form {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     max-width: 480px;
   }
+  form label {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
   input,
   textarea {
     padding: 0.6rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--wire);
     border-radius: var(--radius);
     font: inherit;
   }

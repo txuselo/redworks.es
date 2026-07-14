@@ -11,11 +11,12 @@ interface Props {
   entry: CollectionEntry<'services'>;
 }
 const { entry } = Astro.props;
-const { title, metaDescription, heroTitle, heroImage, sections, whyChooseUs } = entry.data;
+const { title, metaDescription, heroTitle, heroImage, sections, whyChooseUs, category } = entry.data;
+const categoryLabel = category === 'electricidad' ? 'Electricidad y energías renovables' : 'Telecomunicaciones';
 ---
 
 <Layout title={`${title} | Redworks`} description={metaDescription}>
-  <Hero title={heroTitle} image={heroImage} />
+  <Hero title={heroTitle} image={heroImage} eyebrow={categoryLabel} />
   {
     sections.map((section) => (
       <section class="content-section container">

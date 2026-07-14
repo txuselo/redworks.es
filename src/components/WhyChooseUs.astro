@@ -13,7 +13,8 @@ const { cards } = Astro.props;
 ---
 
 <section class="why container">
-  <h2>¿Por Qué Elegirnos?</h2>
+  <p class="eyebrow">Por qué Redworks</p>
+  <h2>Razones para elegirnos</h2>
   <div class="cards">
     {
       cards.map((card) => (
@@ -30,7 +31,6 @@ const { cards } = Astro.props;
 <style>
   .why {
     padding: 3rem 0;
-    text-align: center;
   }
   .cards {
     display: grid;
@@ -39,10 +39,10 @@ const { cards } = Astro.props;
     margin-top: 2rem;
   }
   .card {
-    color: var(--color-primary);
+    color: var(--blue);
   }
   .card h3,
   .card p {
-    color: var(--color-text);
+    color: var(--text);
   }
 </style>

@@ -3,65 +3,220 @@ import { Image } from 'astro:assets';
 import logo from '../assets/shared/logo.png';
 
 const SERVICES = [
-  { label: "Telecomunicaciones", href: "/telecomunicaciones/" },
-  { label: "Telefonía VoIP", href: "/telefonia-voip/" },
-  { label: "Audiovisuales", href: "/audiovisuales/" },
-  { label: "Videoconferencias", href: "/videoconferencias/" },
-  { label: "Megafonía", href: "/megafonia/" },
-  { label: "Sala de conferencias", href: "/conferencias/" },
-  { label: "Redes informáticas", href: "/sistemas-informaticos/" },
-  { label: "Redes wifi", href: "/redes-wifi/" },
-  { label: "Sistema de seguridad", href: "/seguridad/" },
-  { label: "Electricidad", href: "/electricidad/" },
-  { label: "Paneles solares", href: "/paneles/" },
-  { label: "Instalación eléctrica de baja tensión", href: "/instalacion-electrica-de-baja-tension/" },
+  { label: 'Telecomunicaciones', href: '/telecomunicaciones/' },
+  { label: 'Telefonía VoIP', href: '/telefonia-voip/' },
+  { label: 'Audiovisuales', href: '/audiovisuales/' },
+  { label: 'Videoconferencias', href: '/videoconferencias/' },
+  { label: 'Megafonía', href: '/megafonia/' },
+  { label: 'Sala de conferencias', href: '/conferencias/' },
+  { label: 'Redes informáticas', href: '/sistemas-informaticos/' },
+  { label: 'Redes wifi', href: '/redes-wifi/' },
+  { label: 'Sistema de seguridad', href: '/seguridad/' },
+  { label: 'Electricidad', href: '/electricidad/' },
+  { label: 'Paneles solares', href: '/paneles/' },
+  { label: 'Instalación eléctrica de baja tensión', href: '/instalacion-electrica-de-baja-tension/' },
+];
+
+const PAGES = [
+  { label: 'Clientes', href: '/clientes/' },
+  { label: 'Quiénes somos', href: '/quienes-somos/' },
+  { label: 'Contacto', href: '/contacto/' },
 ];
 ---
+
 <header class="site-header">
   <div class="container bar">
     <a href="/" class="logo">
-      <Image src={logo} alt="Redworks Solutions" width={180} height={44} />
+      <Image src={logo} alt="Redworks Solutions" width={170} height={41} />
     </a>
-    <nav aria-label="Principal">
+
+    <nav class="main-nav" aria-label="Principal">
       <ul class="main-menu">
         <li class="has-dropdown">
           <span>Servicios</span>
           <ul class="dropdown">
-            {SERVICES.map((item) => (
-              <li><a href={item.href}>{item.label}</a></li>
-            ))}
+            {
+              SERVICES.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
           </ul>
         </li>
-        <li><a href="/clientes/">Clientes</a></li>
-        <li><a href="/quienes-somos/">Quiénes somos</a></li>
-        <li><a href="/contacto/">Contacto</a></li>
+        {
+          PAGES.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
       </ul>
     </nav>
+
     <a class="phone" href="tel:+34910527499">910 52 74 99</a>
+
+    <details class="mobile-nav">
+      <summary aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </summary>
+      <ul class="mobile-menu">
+        <li class="mobile-heading">Servicios</li>
+        {
+          SERVICES.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li class="mobile-heading">Empresa</li>
+        {
+          PAGES.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
   </div>
 </header>
+
 <style>
-  .site-header { border-bottom: 1px solid #eee; }
-  .bar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; gap: 1rem; }
-  .logo { display: block; }
-  .logo img { display: block; height: 40px; width: auto; }
-  .main-menu { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
-  .main-menu > li { position: relative; }
-  .has-dropdown > span { cursor: default; font-weight: 600; }
+  .site-header {
+    border-bottom: 1px solid var(--wire);
+    background: var(--white);
+    position: relative;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .logo {
+    display: block;
+    flex-shrink: 0;
+  }
+  .logo img {
+    display: block;
+    height: 34px;
+    width: auto;
+  }
+  .main-nav {
+    flex: 1;
+  }
+  .main-menu {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.94rem;
+  }
+  .main-menu a,
+  .has-dropdown > span {
+    color: var(--text);
+  }
+  .main-menu a:hover {
+    color: var(--blue);
+    text-decoration: none;
+  }
+  .main-menu > li {
+    position: relative;
+  }
+  .has-dropdown > span {
+    cursor: default;
+    font-weight: 500;
+  }
   .dropdown {
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fff;
-    border: 1px solid #eee;
+    top: calc(100% + 1.1rem);
+    left: -1rem;
+    background: var(--white);
+    border: 1px solid var(--wire);
     border-radius: var(--radius);
     padding: 0.5rem 0;
-    min-width: 260px;
+    min-width: 270px;
     flex-direction: column;
     z-index: 10;
+    box-shadow: 0 12px 24px -8px rgba(11, 18, 32, 0.18);
   }
-  .has-dropdown:hover .dropdown { display: flex; }
-  .dropdown li a { display: block; padding: 0.4rem 1rem; }
-  .phone { font-weight: 700; white-space: nowrap; }
+  .has-dropdown:hover .dropdown {
+    display: flex;
+  }
+  .dropdown li a {
+    display: block;
+    padding: 0.45rem 1.1rem;
+    font-size: 0.9rem;
+  }
+  .phone {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.92rem;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .phone:hover {
+    color: var(--blue);
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+  .mobile-nav summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0.4rem;
+  }
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-nav summary span {
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    display: block;
+  }
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border-top: 1px solid var(--wire);
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0 1rem;
+    max-height: 75vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 24px -8px rgba(11, 18, 32, 0.18);
+  }
+  .mobile-menu li a {
+    display: block;
+    padding: 0.55rem 1.5rem;
+    color: var(--text);
+  }
+  .mobile-heading {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.9rem 1.5rem 0.2rem;
+  }
+
+  @media (max-width: 860px) {
+    .main-nav {
+      display: none;
+    }
+    .mobile-nav {
+      display: block;
+    }
+  }
 </style>

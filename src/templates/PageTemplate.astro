@@ -90,30 +90,37 @@ const telecomServices = services
 
 <style>
   .team {
-    padding: 2rem 0 3rem;
+    padding: 1rem 0 3.5rem;
+  }
+  .team h2 {
     text-align: center;
   }
   .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    gap: 1.75rem;
+    margin-top: 2.5rem;
   }
   .team-card img {
     border-radius: var(--radius);
     width: 100%;
     aspect-ratio: 4 / 4.4;
     object-fit: cover;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.65rem;
+    border-top: 3px solid var(--blue);
   }
   .team-card .name {
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-weight: 600;
     margin: 0;
   }
   .team-card .role {
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    margin: 0;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin: 0.15rem 0 0;
   }
   .client-logos {
     display: grid;
@@ -137,15 +144,15 @@ const telecomServices = services
   .service-link {
     display: block;
     padding: 1.25rem;
-    border: 1px solid #eee;
+    border: 1px solid var(--wire);
     border-radius: var(--radius);
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--text);
     text-align: center;
   }
   .service-link:hover {
-    border-color: var(--color-primary);
+    border-color: var(--blue);
     text-decoration: none;
-    background: var(--color-bg-alt);
+    background: var(--paper);
   }
 </style>

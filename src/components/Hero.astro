@@ -1,28 +1,36 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import NodePattern from './NodePattern.astro';
 
 interface Props {
   title: string;
   image?: ImageMetadata;
+  eyebrow?: string;
+  dark?: boolean;
 }
-const { title, image } = Astro.props;
+const { title, image, eyebrow, dark = false } = Astro.props;
 ---
 
-<section class="hero">
+<section class:list={['hero', { dark }]}>
+  {dark && <NodePattern class="node-pattern" />}
   {image && <Image src={image} alt="" class="hero-bg" width={1600} height={700} />}
   <div class="container">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>
-    <p><slot /></p>
+    <p class="lede"><slot /></p>
   </div>
 </section>
 
 <style>
   .hero {
     position: relative;
-    padding: 4rem 0;
-    background: var(--color-bg-alt);
+    padding: 4.5rem 0;
+    background: var(--paper);
     overflow: hidden;
+  }
+  .hero.dark {
+    background: var(--ink);
   }
   .hero-bg {
     position: absolute;
@@ -30,7 +38,16 @@ const { title, image } = Astro.props;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.18;
+    opacity: 0.16;
+    z-index: 0;
+  }
+  .node-pattern {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--wire-on-ink);
+    opacity: 0.9;
     z-index: 0;
   }
   .hero .container {
@@ -38,12 +55,25 @@ const { title, image } = Astro.props;
     z-index: 1;
     max-width: 800px;
   }
-  .hero h1 {
-    font-size: 2.25rem;
-    color: var(--color-primary-dark);
+  .hero .eyebrow {
+    margin-bottom: 1rem;
   }
-  .hero p {
+  .hero.dark .eyebrow {
+    color: #6fb8e6;
+  }
+  .hero h1 {
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    color: var(--blue-deep);
+  }
+  .hero.dark h1 {
+    color: #fff;
+  }
+  .hero .lede {
     font-size: 1.1rem;
-    color: var(--color-text);
+    color: var(--text-muted);
+    max-width: 620px;
+  }
+  .hero.dark .lede {
+    color: #c3ccdc;
   }
 </style>

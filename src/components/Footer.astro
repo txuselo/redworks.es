@@ -1,12 +1,21 @@
 ---
 const year = new Date().getFullYear();
 ---
+
 <footer class="site-footer">
   <div class="container footer-grid">
-    <div>
-      <p><strong>Redworks Solutions</strong></p>
-      <p>Calle José Echegaray, 14<br />Edificio A2, planta 2, nave 8</p>
-      <p><a href="tel:+34910527499">910 52 74 99</a></p>
+    <div class="nameplate">
+      <p class="brand">Redworks Solutions</p>
+      <dl>
+        <div>
+          <dt>Dirección</dt>
+          <dd>Calle José Echegaray, 14 · Edificio A2, planta 2, nave 8</dd>
+        </div>
+        <div>
+          <dt>Teléfono</dt>
+          <dd><a href="tel:+34910527499">910 52 74 99</a></dd>
+        </div>
+      </dl>
     </div>
     <nav aria-label="Legal">
       <ul class="legal-links">
@@ -20,9 +29,63 @@ const year = new Date().getFullYear();
     <p>Copyright {year} Redworks Solutions. Todos los derechos reservados.</p>
   </div>
 </footer>
+
 <style>
-  .site-footer { background: var(--color-bg-alt); margin-top: 3rem; padding: 2.5rem 0 1rem; }
-  .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
-  .legal-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
-  .copyright { margin-top: 1.5rem; font-size: 0.85rem; color: var(--color-text-muted); }
+  .site-footer {
+    background: var(--ink-2);
+    color: #c3ccdc;
+    margin-top: 3rem;
+    padding: 2.75rem 0 1.25rem;
+  }
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: #fff;
+    margin: 0 0 0.75rem;
+  }
+  .nameplate dl {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .nameplate dl > div {
+    margin-bottom: 0.5rem;
+  }
+  .nameplate dt {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.7rem;
+    color: #7986a0;
+  }
+  .nameplate dd {
+    margin: 0.15rem 0 0;
+    color: #dfe4ee;
+  }
+  .nameplate a {
+    color: #dfe4ee;
+  }
+  .legal-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .legal-links a {
+    color: #c3ccdc;
+  }
+  .copyright {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #7986a0;
+    font-family: var(--font-mono);
+  }
 </style>

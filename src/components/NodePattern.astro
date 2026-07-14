@@ -1,0 +1,68 @@
+---
+// A schematic "connected nodes" motif, drawn from the same dot pattern as the
+// real Redworks logo (alternating blue/red circles linked by thin lines) —
+// used once, as this design's signature element, not as generic decoration.
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+
+const NODES = [
+  { x: 40, y: 60, c: 'red' },
+  { x: 120, y: 30, c: 'blue' },
+  { x: 120, y: 110, c: 'blue' },
+  { x: 210, y: 60, c: 'red' },
+  { x: 210, y: 150, c: 'red' },
+  { x: 300, y: 30, c: 'blue' },
+  { x: 300, y: 110, c: 'blue' },
+  { x: 390, y: 60, c: 'red' },
+  { x: 390, y: 150, c: 'red' },
+  { x: 480, y: 30, c: 'blue' },
+  { x: 480, y: 110, c: 'blue' },
+  { x: 570, y: 60, c: 'red' },
+];
+const LINKS = [
+  [0, 1],
+  [0, 2],
+  [1, 3],
+  [2, 3],
+  [2, 4],
+  [3, 5],
+  [3, 6],
+  [4, 6],
+  [5, 7],
+  [6, 7],
+  [6, 8],
+  [7, 9],
+  [7, 10],
+  [8, 10],
+  [9, 11],
+  [10, 11],
+];
+---
+
+<svg
+  class={className}
+  viewBox="0 0 620 180"
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    LINKS.map(([a, b]) => (
+      <line
+        x1={NODES[a].x}
+        y1={NODES[a].y}
+        x2={NODES[b].x}
+        y2={NODES[b].y}
+        stroke="currentColor"
+        stroke-width="1"
+      />
+    ))
+  }
+  {
+    NODES.map((n) => (
+      <circle cx={n.x} cy={n.y} r="7" fill={n.c === 'red' ? 'var(--red)' : 'var(--blue)'} />
+    ))
+  }
+</svg>
