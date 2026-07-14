@@ -1,0 +1,82 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+---
+
+<Layout
+  title="Contacto | Redworks"
+  description="Contacta con Redworks Solutions para tus proyectos de telecomunicaciones y electricidad en Madrid. Llámanos al 910 52 74 99."
+>
+  <Hero title="Contacta con nosotros">
+    ¿Tienes un proyecto de telecomunicaciones, electricidad o energías renovables? Cuéntanos qué necesitas.
+  </Hero>
+
+  <section class="container contact-grid">
+    <div class="contact-info">
+      <h2>Nuestros datos</h2>
+      <p><a href="tel:+34910527499">910 52 74 99</a></p>
+      <p>Calle José Echegaray, 14<br />Edificio A2, planta 2, nave 8</p>
+    </div>
+
+    <form id="contact-form" method="POST" action="/api/contact">
+      <label for="name">Nombre</label>
+      <input id="name" name="name" type="text" required />
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required />
+
+      <label for="phone">Teléfono</label>
+      <input id="phone" name="phone" type="tel" required />
+
+      <label for="message">Mensaje</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+
+      <label class="checkbox">
+        <input type="checkbox" name="accepted" required />
+        He leído y acepto la <a href="/politica-de-privacidad/">política de privacidad</a>.
+      </label>
+
+      <button class="button" type="submit">Enviar</button>
+      <p id="contact-form-status" role="status"></p>
+    </form>
+  </section>
+
+  <script src="../scripts/contact-form.ts"></script>
+</Layout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    padding: 3rem 0;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 480px;
+  }
+  input,
+  textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    font: inherit;
+  }
+  .checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .checkbox input {
+    width: auto;
+  }
+  @media (max-width: 700px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
