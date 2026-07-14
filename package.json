@@ -1,0 +1,23 @@
+{
+  "name": "redworks-es",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "extract:shared": "node scripts/fetch-shared-assets.mjs",
+    "extract:services": "node scripts/fetch-services.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.7.0",
+    "@astrojs/cloudflare": "^12.2.0"
+  },
+  "devDependencies": {
+    "cheerio": "^1.0.0",
+    "vitest": "^3.0.0",
+    "yaml": "^2.6.0",
+    "typescript": "^5.6.0"
+  }
+}
