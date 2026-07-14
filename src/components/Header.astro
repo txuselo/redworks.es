@@ -22,6 +22,10 @@ const PAGES = [
   { label: 'Quiénes somos', href: '/quienes-somos/' },
   { label: 'Contacto', href: '/contacto/' },
 ];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => currentPath === href;
+const isInServices = SERVICES.some((item) => isActive(item.href));
 ---
 
 <header class="site-header">
@@ -33,12 +37,14 @@ const PAGES = [
     <nav class="main-nav" aria-label="Principal">
       <ul class="main-menu">
         <li class="has-dropdown">
-          <span>Servicios</span>
+          <span class:list={{ active: isInServices }}>Servicios</span>
           <ul class="dropdown">
             {
               SERVICES.map((item) => (
                 <li>
-                  <a href={item.href}>{item.label}</a>
+                  <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                    {item.label}
+                  </a>
                 </li>
               ))
             }
@@ -47,7 +53,9 @@ const PAGES = [
         {
           PAGES.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
             </li>
           ))
         }
@@ -65,7 +73,9 @@ const PAGES = [
         {
           SERVICES.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
             </li>
           ))
         }
@@ -73,7 +83,9 @@ const PAGES = [
         {
           PAGES.map((item) => (
             <li>
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
             </li>
           ))
         }
@@ -123,6 +135,10 @@ const PAGES = [
     color: var(--blue);
     text-decoration: none;
   }
+  .main-menu a[aria-current='page'] {
+    color: var(--blue);
+    font-weight: 600;
+  }
   .main-menu > li {
     position: relative;
   }
@@ -130,8 +146,14 @@ const PAGES = [
     cursor: default;
     font-weight: 500;
   }
+  .has-dropdown > span.active {
+    color: var(--blue);
+    font-weight: 600;
+  }
   .dropdown {
     display: none;
+    list-style: none;
+    margin: 0;
     position: absolute;
     top: calc(100% + 1.1rem);
     left: -1rem;
@@ -151,6 +173,11 @@ const PAGES = [
     display: block;
     padding: 0.45rem 1.1rem;
     font-size: 0.9rem;
+  }
+  .dropdown li a[aria-current='page'] {
+    color: var(--blue);
+    font-weight: 600;
+    background: var(--paper);
   }
   .phone {
     font-family: var(--font-mono);
@@ -201,6 +228,11 @@ const PAGES = [
     display: block;
     padding: 0.55rem 1.5rem;
     color: var(--text);
+  }
+  .mobile-menu li a[aria-current='page'] {
+    color: var(--blue);
+    font-weight: 600;
+    background: var(--paper);
   }
   .mobile-heading {
     font-family: var(--font-mono);
