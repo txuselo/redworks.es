@@ -1,0 +1,23 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada | Redworks" description="La página que buscas no existe.">
+  <section class="container not-found">
+    <h1>404</h1>
+    <p>La página que buscas no existe o ha sido movida.</p>
+    <a class="button" href="/">Volver al inicio</a>
+  </section>
+</Layout>
+
+<style>
+  .not-found {
+    padding: 5rem 0;
+    text-align: center;
+  }
+  .not-found h1 {
+    font-size: 4rem;
+    color: var(--color-primary);
+  }
+</style>
