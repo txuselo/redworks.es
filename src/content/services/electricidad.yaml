@@ -1,0 +1,44 @@
+order: 10
+category: electricidad
+navLabel: Electricidad
+title: Electricidad y Energías Renovables en Madrid
+metaDescription: Empresa Instaladora de Electricidad y Energías Renovables en
+  Madrid ✅Instalación eléctrica de baja tensión, placas y paneles solares
+  ☎️910527499
+heroImage: ./electricidad/hero.jpg
+heroTitle: Empresa Instaladora de Electricidad y Energías Renovables en Madrid
+sections:
+  - heading: Electricidad
+    body: En Redworks disponemos del mejor equipo de profesionales el montaje y
+      mantenimiento de líneas de baja tensión.Como empresa autorizada por la
+      Comunidad de Madrid, en Redworks podemos diseñar, planificar y ejecutar
+      cualquier proyecto en baja tensión, pudiendo realizar la homologación
+      íntegra de la instalación acorde a la legislación vigente.
+    image: ./electricidad/section-0.jpg
+  - heading: Energía Renovable
+    body: Comprometidos con la eficiencia energética y la sostenibilidad, en
+      Redworks disponemos de los conocimientos y las capacidades necesarias para
+      realizar instalaciones de placas y paneles fotovoltáicos. Nuestros
+      profesionales prestan asesoramiento personalizado a cada necesidad,
+      realizando un diseño a medida para cada cliente.Nuestra experiencia
+      también nos permite realizar revisiones y comprobaciones del
+      funcionamiento de las instalaciones, para asegurar que el rendimiento y
+      eficiencia de los equipos sea el mayor posible.
+    image: ./electricidad/section-1.jpg
+whyChooseUs:
+  - icon: user-tie
+    title: Experiencia y profesionalismo
+    body: Nuestro equipo altamente especializado cuenta con más de 15 años de
+      experiencia en el sector eléctrico y de energías renovables. Confía en
+      nuestro conocimiento para obtener soluciones confiables y eficientes.
+  - icon: balance-scale
+    title: Compromiso con la sostenibilidad
+    body: En Redworks Solutions, creemos en un futuro más sostenible. Nuestras
+      instalaciones de energías renovables no solo te ayudan a reducir costos,
+      sino que también contribuyen a la preservación del medio ambiente al
+      disminuir tu huella de carbono.
+  - icon: check-circle
+    title: Enfoque personalizado
+    body: Comprendemos que cada proyecto es único. Nuestro equipo trabaja contigo
+      para diseñar soluciones a medida que se adapten perfectamente a tus
+      necesidades energéticas. Tu satisfacción es nuestro motor.

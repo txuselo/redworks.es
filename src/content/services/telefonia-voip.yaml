@@ -1,0 +1,47 @@
+order: 2
+category: telecomunicaciones
+navLabel: Telefonía VoIP
+title: Servicios de TELEFONÍA VOIP en Madrid
+metaDescription: Servicios de Telefonía Voip en Madrid ✅ Eficiente ✅ Flexible ✅
+  Personal Altamente Cualificado ☎️608919100
+heroImage: ./telefonia-voip/hero.jpg
+heroTitle: Empresa de Telefonía VOIP en Madrid
+sections:
+  - heading: Accesorios telefónicos
+    body: En función de la necesidad que tengan nuestros clientes, contamos con una
+      solución específica y personalizada, con precios económicos y las mejores
+      prestaciones. Nuestro servicio incluye el suministro, la instalación y
+      también la configuración de todo el equipamiento de la solución.Además,
+      ofrecemos servicios de formación y explicación al finalizar el proyecto
+      para capacitar a nuestros clientes, de esta forma pueden usar
+      correctamente todos los dispositivos y sacar un mayor partido a la
+      solución.
+    image: ./telefonia-voip/section-0.jpg
+  - heading: Servicios telefónicos
+    body: Todas las tecnologías para sacar el máximo partido a sus comunicaciones.En
+      Redworks trabajamos siempre con las mejores tecnologías para conseguir dar
+      un servicio personalizado y actualizado, aprovechando los avances
+      tecnológicos del momento para estar al día.
+    image: ./telefonia-voip/section-1.jpg
+  - heading: Cableados e infraestructuras
+    body: Un correcto cableado es la base para un correcto funcionamiento de las
+      instalaciones.Es necesario contar con un cableado de calidad para poder
+      realizar una instalación correcta de cualquier sistema de comunicaciones.
+    image: ./telefonia-voip/section-2.jpg
+whyChooseUs:
+  - icon: user-tie
+    title: Experiencia en telecomunicaciones
+    body: Con más de 15 años de experiencia en el sector de las telecomunicaciones,
+      somos expertos en proporcionar soluciones telefónicas eficientes y de alta
+      calidad para empresas y particulares.
+  - icon: check-circle
+    title: Tecnología de vanguardia
+    body: En Redworks Solutions, nos mantenemos al día con las últimas tecnologías
+      en el campo de las comunicaciones. Nuestras soluciones están respaldadas
+      por la tecnología más avanzada para garantizar un rendimiento óptimo y una
+      experiencia sin problemas.
+  - icon: check-circle
+    title: Atención personalizada
+    body: Entendemos que las necesidades pueden variar. Por eso, ofrecemos
+      soluciones que se adaptan a tus requisitos específicos. Estamos aquí para
+      brindarte el soporte que necesitas en cada paso del proceso.
