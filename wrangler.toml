@@ -1,5 +1,6 @@
 name = "redworks-es"
 compatibility_date = "2026-07-01"
+compatibility_flags = ["nodejs_compat"]
 main = "./dist/_worker.js/index.js"
 
 [assets]
