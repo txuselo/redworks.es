@@ -1,0 +1,61 @@
+---
+const SERVICES = [
+  { label: "Telecomunicaciones", href: "/telecomunicaciones/" },
+  { label: "Telefonía VoIP", href: "/telefonia-voip/" },
+  { label: "Audiovisuales", href: "/audiovisuales/" },
+  { label: "Videoconferencias", href: "/videoconferencias/" },
+  { label: "Megafonía", href: "/megafonia/" },
+  { label: "Sala de conferencias", href: "/conferencias/" },
+  { label: "Redes informáticas", href: "/sistemas-informaticos/" },
+  { label: "Redes wifi", href: "/redes-wifi/" },
+  { label: "Sistema de seguridad", href: "/seguridad/" },
+  { label: "Electricidad", href: "/electricidad/" },
+  { label: "Paneles solares", href: "/paneles/" },
+  { label: "Instalación eléctrica de baja tensión", href: "/instalacion-electrica-de-baja-tension/" },
+];
+---
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="logo">Redworks Solutions</a>
+    <nav aria-label="Principal">
+      <ul>
+        <li class="has-dropdown">
+          <span>Servicios</span>
+          <ul class="dropdown">
+            {SERVICES.map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </li>
+        <li><a href="/clientes/">Clientes</a></li>
+        <li><a href="/quienes-somos/">Quiénes somos</a></li>
+        <li><a href="/contacto/">Contacto</a></li>
+      </ul>
+    </nav>
+    <a class="phone" href="tel:+34910527499">910 52 74 99</a>
+  </div>
+</header>
+<style>
+  .site-header { border-bottom: 1px solid #eee; }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; gap: 1rem; }
+  .logo { font-weight: 700; font-size: 1.25rem; color: var(--color-text); }
+  nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+  nav > ul > li { position: relative; }
+  .has-dropdown > span { cursor: default; font-weight: 600; }
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: var(--radius);
+    padding: 0.5rem 0;
+    min-width: 260px;
+    flex-direction: column;
+    z-index: 10;
+  }
+  .has-dropdown:hover .dropdown { display: flex; }
+  .dropdown li a { display: block; padding: 0.4rem 1rem; }
+  .phone { font-weight: 700; white-space: nowrap; }
+</style>
