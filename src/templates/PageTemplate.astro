@@ -13,21 +13,48 @@ const { entry } = Astro.props;
 const { title, metaDescription, heroTitle } = entry.data;
 const { Content } = await render(entry);
 
-const TEAM = [
-  { photo: 'felipe', name: 'Felipe Aguilar', role: 'CEO y Fundador' },
-  { photo: 'maria', name: 'María Pérez', role: 'Directora de Estrategia Técnica' },
-  { photo: 'rocio', name: 'Rocío Crespo', role: 'Directora Financiera' },
-  { photo: 'jose-maria', name: 'Jose María Soler', role: 'Director Comercial' },
-  { photo: 'ibrahim', name: 'Ibrahim Benzian', role: 'Equipo técnico' },
-  { photo: 'angel', name: 'Ángel Herranz', role: 'Equipo técnico' },
-  { photo: 'chema', name: 'Chema Cerezo', role: 'Equipo técnico' },
-  { photo: 'javier', name: 'Javier Mesías', role: 'Equipo técnico' },
+const LEADERSHIP = [
+  {
+    photo: 'felipe',
+    name: 'Felipe Aguilar',
+    role: 'CEO y Fundador',
+    bio: 'Fundó Redworks en 2019 tras más de 15 años liderando proyectos de infraestructuras de telecomunicaciones. Sigue de cerca cada instalación como si fuera la primera.',
+  },
+  {
+    photo: 'maria',
+    name: 'María Pérez',
+    role: 'Directora de Estrategia Técnica',
+    bio: 'Diseña la solución técnica de cada proyecto, del primer boceto a la puesta en marcha. Especialista en redes de alta disponibilidad.',
+  },
+  {
+    photo: 'rocio',
+    name: 'Rocío Crespo',
+    role: 'Directora Financiera',
+    bio: 'Mantiene las cuentas y los proveedores bajo control para que cada proyecto llegue a tiempo y sin sorpresas.',
+  },
+  {
+    photo: 'jose-maria',
+    name: 'Jose María Soler',
+    role: 'Director Comercial',
+    bio: 'El primer punto de contacto con cada cliente nuevo. Traduce necesidades de negocio en proyectos técnicos concretos.',
+  },
+];
+
+const TECHNICAL_TEAM = [
+  { photo: 'ibrahim', name: 'Ibrahim Benzian', specialty: 'Cableado estructurado y fibra óptica' },
+  { photo: 'angel', name: 'Ángel Herranz', specialty: 'Sistemas de seguridad y videovigilancia' },
+  { photo: 'chema', name: 'Chema Cerezo', specialty: 'Electricidad de baja tensión y energía solar' },
+  { photo: 'javier', name: 'Javier Mesías', specialty: 'Redes wifi y sistemas audiovisuales' },
 ];
 
 const teamPhotos = import.meta.glob<{ default: ImageMetadata }>('../assets/shared/team/*.jpg', {
   eager: true,
 });
-const teamWithPhotos = TEAM.map((member) => ({
+const leadershipWithPhotos = LEADERSHIP.map((member) => ({
+  ...member,
+  image: teamPhotos[`../assets/shared/team/${member.photo}.jpg`]?.default,
+}));
+const technicalWithPhotos = TECHNICAL_TEAM.map((member) => ({
   ...member,
   image: teamPhotos[`../assets/shared/team/${member.photo}.jpg`]?.default,
 }));
@@ -51,16 +78,40 @@ const telecomServices = services
   {
     entry.id === 'quienes-somos' && (
       <section class="container team">
+        <p class="eyebrow">Las personas detrás de Redworks</p>
         <h2>Nuestro equipo</h2>
-        <div class="team-grid">
-          {teamWithPhotos.map((member) => (
-            <div class="team-card">
-              {member.image && <Image src={member.image} alt={member.name} width={200} height={220} />}
-              <p class="name">{member.name}</p>
-              <p class="role">{member.role}</p>
+        <div class="leadership-grid">
+          {leadershipWithPhotos.map((member) => (
+            <div class="leader-card">
+              {member.image && (
+                <Image src={member.image} alt={member.name} width={320} height={360} class="leader-photo" />
+              )}
+              <div class="leader-info">
+                <p class="name">{member.name}</p>
+                <p class="role">{member.role}</p>
+                <p class="bio">{member.bio}</p>
+              </div>
             </div>
           ))}
         </div>
+
+        <p class="eyebrow technical-eyebrow">Equipo técnico</p>
+        <div class="technical-grid">
+          {technicalWithPhotos.map((member) => (
+            <div class="tech-card">
+              {member.image && (
+                <Image src={member.image} alt={member.name} width={220} height={260} class="tech-photo" />
+              )}
+              <p class="name">{member.name}</p>
+              <p class="specialty">{member.specialty}</p>
+            </div>
+          ))}
+        </div>
+
+        <p class="closing">
+          Para nosotros siempre <em>"prima el cliente y su necesidad"</em> — esa es, en una frase, nuestra
+          filosofía de trabajo.
+        </p>
       </section>
     )
   }
@@ -90,37 +141,89 @@ const telecomServices = services
 
 <style>
   .team {
-    padding: 1rem 0 3.5rem;
+    padding: 1rem 0 4rem;
   }
   .team h2 {
-    text-align: center;
+    margin-bottom: 0.4rem;
   }
-  .team-grid {
+
+  .leadership-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
     margin-top: 2.5rem;
   }
-  .team-card img {
-    border-radius: var(--radius);
-    width: 100%;
-    aspect-ratio: 4 / 4.4;
-    object-fit: cover;
-    margin-bottom: 0.65rem;
-    border-top: 3px solid var(--blue);
+  .leader-card {
+    display: flex;
+    flex-direction: column;
   }
-  .team-card .name {
+  .leader-card :global(.leader-photo) {
+    width: 100%;
+    aspect-ratio: 4 / 4.5;
+    object-fit: cover;
+    border-top: 4px solid var(--blue);
+  }
+  .leader-info {
+    padding-top: 0.85rem;
+  }
+  .leader-info .name {
     font-family: var(--font-display);
+    font-size: 1.15rem;
     font-weight: 600;
     margin: 0;
   }
-  .team-card .role {
+  .leader-info .role {
     font-family: var(--font-mono);
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    color: var(--blue);
+    font-size: 0.75rem;
+    margin: 0.2rem 0 0.6rem;
+  }
+  .leader-info .bio {
     color: var(--text-muted);
-    font-size: 0.78rem;
-    margin: 0.15rem 0 0;
+    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .technical-eyebrow {
+    margin-top: 3.5rem;
+  }
+  .technical-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .tech-card :global(.tech-photo) {
+    width: 100%;
+    aspect-ratio: 4 / 4.4;
+    object-fit: cover;
+    border-top: 3px solid var(--red);
+    margin-bottom: 0.6rem;
+  }
+  .tech-card .name {
+    font-weight: 600;
+    margin: 0;
+  }
+  .tech-card .specialty {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0.2rem 0 0;
+  }
+
+  .closing {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--wire);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--blue-deep);
+    max-width: 640px;
+  }
+  .closing em {
+    font-style: normal;
+    color: var(--red);
   }
   .client-logos {
     display: grid;
