@@ -1,0 +1,26 @@
+order: 7
+category: telecomunicaciones
+navLabel: Redes informáticas
+title: Instalación de Sistemas Informáticos en Madrid I Redworks
+metaDescription: Instalación de SISTEMAS INFORMÁTICOS en Madrid ✅Fibra Óptica,
+  Cableados de Voz y Datos, Networking, Saneado y Documentación ☎️910527499
+heroImage: ./sistemas-informaticos/hero.jpg
+heroTitle: Instalación de sistemas informáticos en Madrid
+sections:
+  - heading: Nuestra solución tecnológica
+    body: La fibra óptica es la mejor opción para conectar ubicaciones distantes
+      entre sí con un ancho de banda óptimo.
+  - heading: Cableados de voz y datos
+    body: "Colaboramos con los principales fabricantes de cableados de voz y datos,
+      asegurando instalaciones que operan de manera impecable. Nos dedicamos
+      también a realizar una integración del cableado en:"
+  - heading: Networking
+    body: "Es fundamental establecer una estructura ágil de electrónica de red para
+      lograr la funcionalidad deseada en las infraestructuras. Nosotros contamos
+      con sistemas de alta disponibilidad que incluyen:"
+  - heading: Saneado y documentación
+    body: "Vamos un paso más allá, pues con el fin de resolver los desperfectos
+      sufridos, nos encargamos de reemplazar equipos obsoletos y mejorar la
+      tecnología para restaurar el correcto funcionamiento de todos los
+      sistemas. Te aseguramos la reducción del riesgo de averías e incendios y
+      facilitamos la gestión y el cumplimiento de la normativa mediante:"

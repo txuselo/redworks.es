@@ -28,7 +28,8 @@ const services = defineCollection({
             body: z.string(),
           })
         )
-        .length(3),
+        .length(3)
+        .optional(),
     }),
 });
 

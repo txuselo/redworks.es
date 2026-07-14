@@ -14,7 +14,8 @@ const serviceEntrySchema = z.object({
   sections: z.array(z.object({ heading: z.string(), body: z.string() })).min(1),
   whyChooseUs: z
     .array(z.object({ icon: z.string(), title: z.string(), body: z.string() }))
-    .length(3),
+    .length(3)
+    .optional(),
 });
 
 describe('service entry schema', () => {
@@ -52,6 +53,33 @@ describe('service entry schema', () => {
         { icon: 'wifi', title: 'a', body: 'b' },
         { icon: 'wifi', title: 'a', body: 'b' },
       ],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts an entry with whyChooseUs omitted entirely (redesigned pages with no "why choose us" block)', () => {
+    const result = serviceEntrySchema.safeParse({
+      order: 3,
+      category: 'telecomunicaciones',
+      navLabel: 'Audiovisuales',
+      title: 't',
+      metaDescription: 'd',
+      heroTitle: 'h',
+      sections: [{ heading: 'a', body: 'b' }],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an entry with an empty whyChooseUs array (must be omitted, not [], when absent)', () => {
+    const result = serviceEntrySchema.safeParse({
+      order: 3,
+      category: 'telecomunicaciones',
+      navLabel: 'Audiovisuales',
+      title: 't',
+      metaDescription: 'd',
+      heroTitle: 'h',
+      sections: [{ heading: 'a', body: 'b' }],
+      whyChooseUs: [],
     });
     expect(result.success).toBe(false);
   });

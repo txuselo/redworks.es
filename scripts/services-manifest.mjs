@@ -1,5 +1,4 @@
 export const SERVICES_MANIFEST = [
-  { slug: 'telecomunicaciones', order: 1, category: 'telecomunicaciones', navLabel: 'Telecomunicaciones', timestamp: '20260416161407' },
   { slug: 'telefonia-voip', order: 2, category: 'telecomunicaciones', navLabel: 'Telefonía VoIP', timestamp: '20260511054809' },
   { slug: 'audiovisuales', order: 3, category: 'telecomunicaciones', navLabel: 'Audiovisuales', timestamp: '20260511054445' },
   { slug: 'videoconferencias', order: 4, category: 'telecomunicaciones', navLabel: 'Videoconferencias', timestamp: '20250912223833' },

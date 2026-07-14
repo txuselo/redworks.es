@@ -6,6 +6,9 @@ import { parseServicePage, mapIcon } from './parse-service-page.mjs';
 const fixturePath = fileURLToPath(new URL('./fixtures/electricidad.html', import.meta.url));
 const html = readFileSync(fixturePath, 'utf-8');
 
+const seguridadFixturePath = fileURLToPath(new URL('./fixtures/seguridad.html', import.meta.url));
+const seguridadHtml = readFileSync(seguridadFixturePath, 'utf-8');
+
 describe('parseServicePage', () => {
   const result = parseServicePage(html);
 
@@ -56,6 +59,38 @@ describe('parseServicePage', () => {
         body: expect.stringContaining('diseñar soluciones a medida'),
       },
     ]);
+  });
+});
+
+describe('parseServicePage against a redesigned page (no "why choose us" block, elementor-size-default sections)', () => {
+  const result = parseServicePage(seguridadHtml);
+
+  it('extracts the page title without the "| Redworks" suffix', () => {
+    expect(result.title).toBe('Instalación de sistemas de seguridad en Madrid');
+  });
+
+  it('extracts the meta description', () => {
+    expect(result.metaDescription).toBe(
+      'Instalación de sistemas de seguridad en Madrid ✅Procedimientos y tecnologías para proteger personas, propiedades, datos y activos ☎910527499'
+    );
+  });
+
+  it('extracts the h1 hero title', () => {
+    expect(result.heroTitle).toBe('Instalación de Sistemas de Seguridad en Madrid');
+  });
+
+  it('extracts the three real prose sections, skipping the shared brands heading', () => {
+    expect(result.sections).toHaveLength(3);
+    expect(result.sections[0].heading).toBe('Videovigilancia');
+    expect(result.sections[0].body).toContain('cámaras de video para monitorizar y grabar actividades en tiempo real');
+    expect(result.sections[1].heading).toBe('Control de Accesos');
+    expect(result.sections[1].body).toContain('garantizar la seguridad, proteger activos y controlar el flujo de personas');
+    expect(result.sections[2].heading).toBe('Interfonos e Intercomunicaciones');
+    expect(result.sections[2].body).toContain('la comunicación interna, la seguridad y el control de accesos');
+  });
+
+  it('returns an empty whyChooseUs array, not omitted/undefined, when the page has no "why choose us" block', () => {
+    expect(result.whyChooseUs).toEqual([]);
   });
 });
 

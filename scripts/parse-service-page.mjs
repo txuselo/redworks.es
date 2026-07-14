@@ -36,22 +36,43 @@ export function parseServicePage(html) {
       return;
     }
 
-    const h2 = section.find('h2.elementor-heading-title.elementor-size-default').first();
-    if (h2.length) {
-      const heading = collapse(h2.text());
-      if (heading.toUpperCase().includes('TRABAJAMOS CON')) return;
-      const bodyParts = section
-        .find('.elementor-widget-text-editor .elementor-widget-container')
-        .map((__, el) => $(el).text())
-        .get();
-      const body = collapse(bodyParts.join(' '));
-      const imageSrc = section.find('.elementor-widget-image img').first().attr('src') || undefined;
-      sections.push({ heading, body, imageSrc });
-      return;
-    }
+    // The site was redesigned at some point: the classic template (electricidad, telefonia-voip)
+    // headed its prose sections with elementor-size-default and its "why choose us" block with
+    // elementor-size-large. Most of the redesigned pages kept elementor-size-default for their prose
+    // headings, but real fetched HTML shows a genuine mix — some redesigned pages (videoconferencias,
+    // conferencias) use elementor-size-xl instead, and others (megafonia, paneles,
+    // instalacion-electrica-de-baja-tension) use elementor-size-large for prose that has nothing to do
+    // with "why choose us". None of the redesigned pages have a "why choose us" block at all. So rather
+    // than assuming heading *size* determines role, match on any of the three real classes and branch on
+    // heading *text* instead — this generalizes correctly across both templates without misclassifying
+    // anything (verified: "TRABAJAMOS CON" only ever appears on elementor-size-default across every page
+    // checked, and "Por Qué Elegirnos" only ever appears on elementor-size-large, on the 2 pages that have
+    // it at all).
+    const h2 = section
+      .find(
+        [
+          'h2.elementor-heading-title.elementor-size-default',
+          'h2.elementor-heading-title.elementor-size-xl',
+          'h2.elementor-heading-title.elementor-size-large',
+        ].join(', ')
+      )
+      .first();
+    if (!h2.length) return;
 
-    const h2Large = section.find('h2.elementor-heading-title.elementor-size-large').first();
-    if (h2Large.length && h2Large.text().includes('Por Qué Elegirnos')) {
+    // Elementor renders separate desktop/mobile variants of the same content side by side in the
+    // markup (one wrapped in elementor-hidden-mobile, its twin in elementor-hidden-desktop, either as
+    // the whole top-level section or nested one column deeper), toggling which one is visible via CSS
+    // per breakpoint. Left unfiltered, both variants get extracted as separate near-duplicate sections
+    // (verified on conferencias and videoconferencias, e.g. "Sistemas Inalámbricos" / "Sistemas
+    // inalámbricos"). Skip anything whose heading sits inside an elementor-hidden-desktop ancestor
+    // (section or column) so only the desktop-rendered copy of each section survives.
+    if (h2.closest('.elementor-hidden-desktop').length > 0) return;
+
+    const heading = collapse(h2.text());
+
+    if (heading.toUpperCase().includes('TRABAJAMOS CON')) return;
+
+    if (heading.toLowerCase().includes('por qué elegirnos')) {
       section.find('.elementor-inner-column').each((__, colEl) => {
         const col = $(colEl);
         const h3 = col.find('h3.elementor-heading-title.elementor-size-medium').first();
@@ -67,7 +88,16 @@ export function parseServicePage(html) {
           body: collapse(bodyParts.join(' ')),
         });
       });
+      return;
     }
+
+    const bodyParts = section
+      .find('.elementor-widget-text-editor .elementor-widget-container')
+      .map((__, el) => $(el).text())
+      .get();
+    const body = collapse(bodyParts.join(' '));
+    const imageSrc = section.find('.elementor-widget-image img').first().attr('src') || undefined;
+    sections.push({ heading, body, imageSrc });
   });
 
   return { title, metaDescription, heroImage, heroTitle, sections, whyChooseUs };
