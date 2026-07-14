@@ -1,0 +1,125 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render, getEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import FAQ from '../components/FAQ.astro';
+import { faqPageSchema } from '../lib/faqSchema';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+const { entry } = Astro.props;
+const { title, metaDescription, heroImage, heroImageAlt, publishDate, updatedDate, relatedService, faqs } =
+  entry.data;
+const { Content } = await render(entry);
+
+const relatedServiceEntry = relatedService ? await getEntry('services', relatedService) : undefined;
+
+const postUrl = new URL(`/blog/${entry.id}/`, Astro.site).toString();
+const heroImageUrl = new URL(heroImage.src, Astro.site).toString();
+
+const articleSchema = {
+  '@type': 'Article',
+  '@id': `${postUrl}#article`,
+  headline: title,
+  description: metaDescription,
+  image: heroImageUrl,
+  datePublished: publishDate.toISOString(),
+  dateModified: (updatedDate ?? publishDate).toISOString(),
+  author: { '@id': 'https://redworks.es/#organization' },
+  publisher: { '@id': 'https://redworks.es/#organization' },
+  mainEntityOfPage: postUrl,
+};
+
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL('/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 3, name: title, item: postUrl },
+  ],
+};
+
+const pageSchema = faqs && faqs.length > 0 ? [articleSchema, breadcrumbSchema, faqPageSchema(faqs)] : [articleSchema, breadcrumbSchema];
+
+const formattedDate = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+  publishDate
+);
+---
+
+<Layout title={`${title} | Blog Redworks`} description={metaDescription} ogImage={heroImageUrl} type="article" schema={pageSchema}>
+  <article class="post container">
+    <p class="eyebrow"><a href="/blog/">Blog</a></p>
+    <h1>{title}</h1>
+    <p class="meta">Publicado el {formattedDate}</p>
+    <Image src={heroImage} alt={heroImageAlt} width={1200} height={675} class="hero-image" />
+    <div class="prose">
+      <Content />
+    </div>
+
+    {faqs && faqs.length > 0 && <FAQ items={faqs} title="Preguntas frecuentes" />}
+
+    {
+      relatedServiceEntry && (
+        <p class="related">
+          ¿Necesitas ayuda con esto? Conoce nuestro servicio de{' '}
+          <a href={`/${relatedServiceEntry.id}/`}>{relatedServiceEntry.data.navLabel.toLowerCase()}</a>.
+        </p>
+      )
+    }
+  </article>
+</Layout>
+
+<style>
+  .post {
+    padding: 2.5rem 0 4rem;
+    max-width: 760px;
+  }
+  .eyebrow a {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.78rem;
+    color: var(--blue);
+  }
+  h1 {
+    max-width: 22ch;
+    margin: 0.5rem 0 0.4rem;
+  }
+  .meta {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: 0 0 1.75rem;
+  }
+  .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+  }
+  .prose :global(h2) {
+    margin-top: 2.25rem;
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    border: 1px solid var(--wire);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+  }
+  .prose :global(th) {
+    background: var(--paper);
+  }
+  .related {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--wire);
+  }
+</style>

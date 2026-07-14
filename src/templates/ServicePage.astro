@@ -6,6 +6,9 @@ import Hero from '../components/Hero.astro';
 import WhyChooseUs from '../components/WhyChooseUs.astro';
 import CtaBand from '../components/CtaBand.astro';
 import BrandsStrip from '../components/BrandsStrip.astro';
+import FAQ from '../components/FAQ.astro';
+import { faqPageSchema } from '../lib/faqSchema';
+import { SERVICE_FAQS } from '../content/serviceFaqs';
 
 interface Props {
   entry: CollectionEntry<'services'>;
@@ -16,6 +19,7 @@ const categoryLabel = category === 'electricidad' ? 'Electricidad y energías re
 
 const pageUrl = new URL(`/${entry.id}/`, Astro.site).toString();
 const ogImageUrl = new URL(heroImage.src, Astro.site).toString();
+const faqItems = SERVICE_FAQS[entry.id];
 
 const serviceSchema = {
   '@type': 'Service',
@@ -36,13 +40,17 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 3, name: navLabel, item: pageUrl },
   ],
 };
+
+const pageSchema = faqItems
+  ? [serviceSchema, breadcrumbSchema, faqPageSchema(faqItems)]
+  : [serviceSchema, breadcrumbSchema];
 ---
 
 <Layout
   title={`${title} | Redworks`}
   description={metaDescription}
   ogImage={ogImageUrl}
-  schema={[serviceSchema, breadcrumbSchema]}
+  schema={pageSchema}
 >
   <Hero title={heroTitle} image={heroImage} imageAlt={`${navLabel} — Redworks Solutions`} eyebrow={categoryLabel} />
   {
@@ -57,6 +65,7 @@ const breadcrumbSchema = {
     ))
   }
   {whyChooseUs && whyChooseUs.length > 0 && <WhyChooseUs cards={whyChooseUs} />}
+  {faqItems && <FAQ items={faqItems} title={`Preguntas frecuentes sobre ${navLabel.toLowerCase()}`} />}
   <CtaBand />
   <BrandsStrip />
 </Layout>

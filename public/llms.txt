@@ -1,0 +1,44 @@
+# Redworks Solutions
+
+> Empresa instaladora de sistemas de telecomunicaciones, electricidad y energías renovables en Madrid, con más de 15 años de experiencia. Redworks diseña, instala y mantiene redes, telefonía VoIP, videoconferencia, megafonía, sistemas de seguridad (CCTV y control de accesos), instalaciones eléctricas de baja tensión y placas solares para empresas.
+
+Sede: Calle José Echegaray, 14, Edificio A2, planta 2, nave 8, Alcobendas, Madrid, España. Teléfono: +34 910 52 74 99.
+
+## Servicios
+
+- [Telecomunicaciones](https://redworks.es/telecomunicaciones/): página resumen de todos los servicios de telecomunicaciones.
+- [Redes informáticas](https://redworks.es/sistemas-informaticos/): cableado estructurado, redes LAN y fibra óptica.
+- [Redes wifi](https://redworks.es/redes-wifi/): despliegue de redes wifi empresariales.
+- [Telefonía VoIP](https://redworks.es/telefonia-voip/): centralitas y telefonía IP.
+- [Videoconferencias](https://redworks.es/videoconferencias/): sistemas de videoconferencia para empresas.
+- [Sala de conferencias](https://redworks.es/conferencias/): equipamiento audiovisual para salas de reuniones.
+- [Megafonía](https://redworks.es/megafonia/): sistemas de megafonía para locales y oficinas.
+- [Audiovisuales](https://redworks.es/audiovisuales/): instalación de sistemas audiovisuales.
+- [Sistema de seguridad](https://redworks.es/seguridad/): CCTV y control de accesos.
+- [Electricidad](https://redworks.es/electricidad/): electricidad y energías renovables, resumen general.
+- [Instalación eléctrica de baja tensión](https://redworks.es/instalacion-electrica-de-baja-tension/): instalaciones eléctricas de baja tensión y boletines eléctricos.
+- [Paneles solares](https://redworks.es/paneles/): autoconsumo fotovoltaico para empresas.
+
+## Empresa
+
+- [Quiénes somos](https://redworks.es/quienes-somos/): equipo directivo y técnico de Redworks Solutions.
+- [Clientes](https://redworks.es/clientes/): empresas que confían en Redworks.
+
+## Blog
+
+- [Blog](https://redworks.es/blog/): artículos y guías prácticas sobre telecomunicaciones, electricidad, seguridad y energía solar.
+- [Boletín eléctrico: qué es, cuándo lo necesitas y quién puede emitirlo](https://redworks.es/blog/boletin-electrico-que-es/)
+- [Placas solares para empresas: ahorro, subvenciones y amortización](https://redworks.es/blog/placas-solares-empresas-guia/)
+- [Telefonía VoIP para empresas: qué es y cómo migrar sin perder tu numeración](https://redworks.es/blog/telefonia-voip-guia-empresas/)
+- [Videovigilancia CCTV analógica vs. IP: qué diferencia hay y cuál elegir](https://redworks.es/blog/videovigilancia-cctv-vs-ip/)
+- [Redes wifi empresariales: claves para una cobertura fiable en oficinas y naves](https://redworks.es/blog/redes-wifi-empresariales-cobertura/)
+
+## Legal
+
+- [Política de privacidad](https://redworks.es/politica-de-privacidad/)
+- [Términos y condiciones](https://redworks.es/terminos-y-condiciones/)
+- [Accesibilidad](https://redworks.es/accesibilidad/)
+
+## Optional
+
+- [Sitemap](https://redworks.es/sitemap-index.xml): índice completo de páginas indexables.

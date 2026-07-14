@@ -3,19 +3,17 @@ category: telecomunicaciones
 navLabel: Telefonía VoIP
 title: Servicios de TELEFONÍA VOIP en Madrid
 metaDescription: Servicios de Telefonía Voip en Madrid ✅ Eficiente ✅ Flexible ✅
-  Personal Altamente Cualificado ☎️608919100
+  Personal Altamente Cualificado ☎️910527499
 heroImage: ./telefonia-voip/hero.jpg
 heroTitle: Empresa de Telefonía VOIP en Madrid
 sections:
-  - heading: Accesorios telefónicos
-    body: En función de la necesidad que tengan nuestros clientes, contamos con una
-      solución específica y personalizada, con precios económicos y las mejores
-      prestaciones. Nuestro servicio incluye el suministro, la instalación y
-      también la configuración de todo el equipamiento de la solución. Además,
-      ofrecemos servicios de formación y explicación al finalizar el proyecto
-      para capacitar a nuestros clientes, de esta forma pueden usar
-      correctamente todos los dispositivos y sacar un mayor partido a la
-      solución.
+  - heading: ¿Qué es la telefonía VoIP?
+    body: La telefonía VoIP transmite las llamadas de voz digitalizadas a través de
+      internet en lugar de la red telefónica tradicional, lo que permite
+      gestionar llamadas desde teléfonos IP, ordenadores o móviles con una
+      sola centralita. Instalamos, configuramos y formamos a tu equipo en el
+      uso de toda la solución, incluida la portabilidad de tu numeración
+      actual.
     image: ./telefonia-voip/section-0.jpg
   - heading: Servicios telefónicos
     body: Todas las tecnologías para sacar el máximo partido a sus comunicaciones. En

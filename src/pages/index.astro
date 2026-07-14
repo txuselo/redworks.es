@@ -7,6 +7,31 @@ import Hero from '../components/Hero.astro';
 import WhyChooseUs from '../components/WhyChooseUs.astro';
 import CtaBand from '../components/CtaBand.astro';
 import BrandsStrip from '../components/BrandsStrip.astro';
+import FAQ from '../components/FAQ.astro';
+import { faqPageSchema } from '../lib/faqSchema';
+
+const HOME_FAQS = [
+  {
+    question: '¿Qué servicios ofrece Redworks Solutions?',
+    answer:
+      'Instalamos y mantenemos sistemas de telecomunicaciones (redes, wifi, VoIP, videoconferencia, megafonía), electricidad de baja tensión, seguridad (CCTV y control de accesos) y energía solar fotovoltaica para empresas en Madrid.',
+  },
+  {
+    question: '¿En qué zonas trabaja Redworks?',
+    answer:
+      'Trabajamos principalmente en Madrid y su área metropolitana, con proyectos puntuales en el resto de España según las necesidades del cliente.',
+  },
+  {
+    question: '¿Cuánta experiencia tiene Redworks Solutions?',
+    answer:
+      'Más de 15 años instalando y manteniendo sistemas de telecomunicaciones, electricidad y energías renovables para empresas de todos los tamaños.',
+  },
+  {
+    question: '¿Ofrecéis presupuesto sin compromiso?',
+    answer:
+      'Sí, estudiamos cada proyecto y preparamos un presupuesto sin compromiso adaptado a las necesidades concretas de tu negocio antes de empezar cualquier instalación.',
+  },
+];
 
 // Port-style codes, like the labels on a patch panel or breaker box — a structural
 // device that actually means something for an installer of this kind of equipment.
@@ -49,6 +74,7 @@ const whyRedworks = [
 <Layout
   title="Empresa Telecomunicaciones y Electricidad Madrid | Redworks"
   description="Empresa Instaladora de Sistemas de Telecomunicaciones y Sistemas de Electricidad en Madrid. Más de 15 años de experiencia. 910 52 74 99"
+  schema={[faqPageSchema(HOME_FAQS)]}
 >
   <Hero title="Telecomunicaciones y electricidad para tu negocio en Madrid" eyebrow="Madrid · Instalador certificado" dark>
     Más de 15 años instalando y manteniendo sistemas de telecomunicaciones, electricidad y energías
@@ -75,6 +101,7 @@ const whyRedworks = [
   </section>
 
   <WhyChooseUs cards={whyRedworks} />
+  <FAQ items={HOME_FAQS} title="Preguntas frecuentes" />
   <CtaBand />
   <BrandsStrip />
 </Layout>

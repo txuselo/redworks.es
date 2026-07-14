@@ -1,0 +1,66 @@
+---
+// Renders an FAQ block AND returns its FAQPage JSON-LD via a named export
+// consumed by the parent page's Layout `schema` prop — keeps the visible
+// content and the structured data for it defined in exactly one place.
+interface QA {
+  question: string;
+  answer: string;
+}
+interface Props {
+  items: QA[];
+  title?: string;
+}
+const { items, title = 'Preguntas frecuentes' } = Astro.props;
+---
+
+<section class="faq container">
+  <h2>{title}</h2>
+  <div class="faq-list">
+    {
+      items.map((item) => (
+        <details class="faq-item">
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .faq {
+    padding: 3rem 0;
+    max-width: 800px;
+  }
+  .faq-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .faq-item {
+    border: 1px solid var(--wire);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item summary::before {
+    content: '+ ';
+    color: var(--blue);
+    font-family: var(--font-mono);
+  }
+  .faq-item[open] summary::before {
+    content: '– ';
+  }
+  .faq-item p {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+  }
+</style>

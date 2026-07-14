@@ -43,4 +43,27 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { services, pages };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      metaDescription: z.string(),
+      excerpt: z.string(),
+      heroImage: image(),
+      heroImageAlt: z.string(),
+      publishDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      relatedService: z.string().optional(),
+      faqs: z
+        .array(
+          z.object({
+            question: z.string(),
+            answer: z.string(),
+          })
+        )
+        .optional(),
+    }),
+});
+
+export const collections = { services, pages, blog };
