@@ -812,127 +812,72 @@ git commit -m "Add Elementor service-page parser with fixture test"
 
 ### Task 5: Shared image assets (logo, brand logos, client logos, team photos)
 
-**Files:**
-- Create: `scripts/download-image.mjs`
-- Create: `scripts/shared-assets-manifest.mjs`
-- Create: `scripts/fetch-shared-assets.mjs`
+**⚠️ AMENDED DURING EXECUTION — read this before Step 1.** The original version of this task assumed Wayback
+Machine had archived the site's images. It hadn't: CDX lookups (`https://web.archive.org/cdx/search/cdx?url=redworks.com.es/wp-content/uploads/*`)
+returned zero results at any timestamp, for either `redworks.com.es` or the predecessor domain `redworks.es` —
+Wayback only ever crawled this domain's HTML, never its media. This is also why the user saw broken images when
+browsing the archived site directly.
 
-**Interfaces:**
-- Produces: `downloadImage(waybackUrl: string, destPath: string): Promise<void>` from `download-image.mjs`, used by both this task and Task 6.
-- Produces: on disk, `src/assets/shared/logo.svg`, `logo-white.svg`, `footer-bg.jpg`, `eu-funding-badge.png`, `digitalizador-badge.svg`, `brands/*.png|jpg` (~35 files), `clients/*.png` (18 files), `team/*.jpg` (8 files), `public/favicon-*.png`.
+The real source turned out to be much better than Wayback: the project owner has a private GitHub repo,
+`txuselo/redworks-web`, which is a daily `mysqldump` + full-filesystem cron backup of the original WordPress
+install (see `redworks-srv/README.md` in `txuselo/redworks` for the cron job) — last pushed 2021-12-27, but that
+covers the entire original `wp-content/uploads/2020` and `wp-content/uploads/2021` media library at full
+resolution, including every logo, client logo, provider logo, and team photo referenced anywhere on the site.
+The project owner separately provided a newer (2023-era) high-resolution logo file pulled from their own
+`txuselo/redworks` infra repo (`resources/images/LOGO-peq.png` and `LOGO-sinletras.png`), which is what's used for
+the on-site logo instead of the 2021 backup's older logo version.
 
-- [ ] **Step 1: Write `scripts/download-image.mjs`**
-
-```js
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
-
-export async function downloadImage(waybackUrl, destPath) {
-  const res = await fetch(waybackUrl);
-  if (!res.ok) {
-    throw new Error(`Failed to download ${waybackUrl}: HTTP ${res.status}`);
-  }
-  const buffer = Buffer.from(await res.arrayBuffer());
-  await mkdir(dirname(destPath), { recursive: true });
-  await writeFile(destPath, buffer);
-}
-```
-
-- [ ] **Step 2: Write the shared assets manifest**
-
-`scripts/shared-assets-manifest.mjs`:
-```js
-const W = 'https://web.archive.org/web/20260416143413id_/';
-
-export const SHARED_ASSETS = [
-  // Logo + favicons
-  [`${W}https://redworks.com.es/wp-content/uploads/2023/08/redworks-logo.svg`, 'src/assets/shared/logo.svg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2023/08/redworks-logo-blanco.svg`, 'src/assets/shared/logo-white.svg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2020/06/cropped-favicon-32x32.png`, 'public/favicon-32x32.png'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2020/06/cropped-favicon-180x180.png`, 'public/favicon-180x180.png'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2020/06/cropped-favicon-192x192.png`, 'public/favicon-192x192.png'],
-
-  // Footer background
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/02/Footer.jpg`, 'src/assets/shared/footer-bg.jpg'],
-
-  // Team photos (quienes-somos)
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Felipe-1.jpg`, 'src/assets/shared/team/felipe.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Maria.jpg`, 'src/assets/shared/team/maria.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Rocio.jpg`, 'src/assets/shared/team/rocio.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Jose-Maria.jpg`, 'src/assets/shared/team/jose-maria.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Ibra.jpg`, 'src/assets/shared/team/ibrahim.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Angel.jpg`, 'src/assets/shared/team/angel.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Chema.jpg`, 'src/assets/shared/team/chema.jpg'],
-  [`${W}https://redworks.com.es/wp-content/uploads/2021/10/Javier.jpg`, 'src/assets/shared/team/javier.jpg'],
-
-  // Client logos (used on /clientes/), 200x200 versions
-  ...['logs-clientes', ...Array.from({ length: 17 }, (_, i) => `logs-clientes_${String(i + 2).padStart(2, '0')}`)]
-    .map((name, i) => [
-      `${W}https://redworks.com.es/wp-content/uploads/2021/02/${name}-200x200.png`,
-      `src/assets/shared/clients/client-${String(i + 1).padStart(2, '0')}.png`,
-    ]),
-
-  // Provider/brand logos (brands strip, shared across all pages), 150x150 versions
-  ...[
-    'Logo_prov_adder', 'Logo_prov_ADVANTECH', 'Logo_prov_alto', 'Logo_prov_aruba', 'Logo_prov_astatic',
-    'Logo_prov_Aten', 'Logo_prov_AXIS', 'Logo_prov_BARIX', 'Logo_prov_Bose', 'Logo_prov_BOSH',
-    'Logo_prov_Bowers', 'Logo_prov_cambium', 'Logo_prov_Christie', 'Logo_prov_cisco', 'Logo_prov_CONCERTO',
-    'Logo_prov_FERMAX', 'Logo_prov_HIKSON', 'Logo_prov_Hitachi', 'Logo_prov_IPRONET', 'Logo_prov_Kramer',
-    'Logo_prov_KTI', 'Logo_prov_lifesize', 'Logo_prov_logitech', 'Logo_prov_Longshine', 'Logo_prov_mackie',
-    'Logo_prov_MILESTONE', 'Logo_prov_MOXA', 'Logo_prov_NEC', 'Logo_prov_NUUO', 'Logo_prov_OPTOMA',
-    'Logo_prov_PANASONIC', 'Logo_prov_PAXTON', 'Logo_prov_PELCO', 'Logo_prov_POLKAUDIO', 'Logo_prov_polycom',
-    'Logo_prov_radvision', 'Logo_prov_ROSSLARE', 'Logo_prov_ruckus', 'Logo_prov_SAMSUNG', 'Logo_prov_SIEMENS',
-    'Logo_prov_Ubiquiti', 'Logo_prov_VIVITECK', 'Logo_prov_VOGELS', 'Logo_prov_yamaha', 'Logo_prov-webex',
-  ].map((name, i) => [
-    `${W}https://redworks.com.es/wp-content/uploads/2021/04/${name}-150x150.png`,
-    `src/assets/shared/brands/brand-${String(i + 1).padStart(2, '0')}.png`,
-  ]),
-  ...['ALTO-PROFESSIONAL', 'ASTATIC', 'BOSE', 'BOWER-WILKINS', 'MACKIE', 'YAMAHA'].map((name, i) => [
-    `${W}https://redworks.com.es/wp-content/uploads/2021/03/${name}-150x150.png`,
-    `src/assets/shared/brands/brand-audio-${String(i + 1).padStart(2, '0')}.png`,
-  ]),
-];
-```
-
-- [ ] **Step 2: Write `scripts/fetch-shared-assets.mjs`**
-
-```js
-import { downloadImage } from './download-image.mjs';
-import { SHARED_ASSETS } from './shared-assets-manifest.mjs';
-
-let failures = 0;
-for (const [url, dest] of SHARED_ASSETS) {
-  try {
-    await downloadImage(url, dest);
-    console.log(`OK   ${dest}`);
-  } catch (err) {
-    failures += 1;
-    console.error(`FAIL ${dest}: ${err.message}`);
-  }
-}
-
-if (failures > 0) {
-  console.error(`${failures} of ${SHARED_ASSETS.length} shared assets failed to download.`);
-  process.exit(1);
-}
-```
-
-- [ ] **Step 3: Run the download and verify the result**
-
-Run: `docker compose run --rm app node scripts/fetch-shared-assets.mjs`
-Expected: every line prints `OK   <path>`, exit code 0. If any URL 404s (a Wayback snapshot can occasionally miss one asset captured at a slightly different time), do not silently skip it — re-run the CDX lookup for that specific file's URL (`https://web.archive.org/cdx/search/cdx?url=redworks.com.es/wp-content/uploads/...&output=json`) to find a timestamp where it was actually captured, and fix that one manifest entry.
-
-Run: `docker compose run --rm app node -e "import('./scripts/shared-assets-manifest.mjs').then(m => console.log(m.SHARED_ASSETS.length))"`
-Expected: prints a number (currently 83: 2 logos + 3 favicons + 1 footer bg + 8 team photos + 18 client logos + 51 brand logos).
-
-Run: `find src/assets/shared public/favicon-32x32.png public/favicon-180x180.png public/favicon-192x192.png -type f | wc -l`
-Expected: the same number printed above. If it's lower, some downloads silently failed to write, which Step 3's exit-code check should already have caught — investigate before moving on rather than assuming it's fine.
-
-- [ ] **Step 4: Commit the manifest, scripts, and downloaded binary assets**
+**This task was executed directly by the controller** (not dispatched to a subagent) because it required access
+the subagent sandbox wouldn't have: a private GitHub repo reachable only via the project owner's own authenticated
+`gh` session, and files on the project owner's local Desktop. If you're re-running or extending this task, the
+real source data is a sparse checkout of that repo:
 
 ```bash
-git add scripts/download-image.mjs scripts/shared-assets-manifest.mjs scripts/fetch-shared-assets.mjs src/assets/shared public/favicon-32x32.png public/favicon-180x180.png public/favicon-192x192.png
-git commit -m "Download and commit shared image assets from Wayback Machine"
+git clone --filter=blob:none --no-checkout --depth 1 https://github.com/txuselo/redworks-web.git /tmp/redworks-web-backup
+cd /tmp/redworks-web-backup
+git sparse-checkout init --cone
+git sparse-checkout set wp-content/uploads
+git checkout
+```
+
+**What actually landed on disk** (already committed):
+- `src/assets/shared/logo.png` — full wordmark, from the project owner's `txuselo/redworks` repo.
+- `src/assets/shared/logo-icon.png` — icon mark only (no text), same source; used as the favicon.
+- `src/assets/shared/footer-bg.jpg` — from the backup's `wp-content/uploads/2021/02/Footer.jpg`.
+- `src/assets/shared/clients/client-01.png` … `client-18.png` — full-resolution client logos, from
+  `wp-content/uploads/2021/02/logs-clientes*.png` in the backup (the base file plus `_02` through `_18`).
+- `src/assets/shared/team/{felipe,maria,rocio,jose-maria,ibrahim,angel,chema,javier}.jpg` — from
+  `wp-content/uploads/2021/10/{Felipe-1,Maria,Rocio,Jose-Maria,Ibra,Angel,Chema,Javier}.jpg` in the backup.
+- `src/assets/shared/brands/*.png|jpg` — 79 provider/brand logos, from `wp-content/uploads/2021/04/Logo_prov*.png|jpg`
+  and the 6 audio-brand files in `wp-content/uploads/2021/03/{ALTO-PROFESSIONAL,ASTATIC,BOSE,BOWER-WILKINS,MACKIE,YAMAHA}.png`,
+  deduplicated (the backup has some brands uploaded twice under a `-1` suffix; the plain name was kept) and renamed
+  to lowercase-kebab-case with the `Logo_prov_`/`Logo_proveedores_` prefix stripped (e.g. `Logo_prov_cisco.png` →
+  `cisco.png`).
+- `src/assets/shared/services/*.jpg` — real per-service hero photos pulled from the same backup (used by Task 6):
+  `electricidad-destacada.jpg`, `placas-fotovoltaicas-destacada.jpg`, `proyectos-baja-tension-destacada.jpg`
+  (from `2021/10`), and `videoconferencia01.jpg`, `seguridad03-redworks.jpg`, `sistema-wifi03.jpg`,
+  `portada-megafonia.jpg`, `portada-audiovisuales.jpg`, `portada-sistemas-informaticos.jpg`, `telefonia-1.jpg`
+  (from `2021/04` and `2021/02`).
+
+**Files not needed after this pivot:** `scripts/download-image.mjs`, `scripts/shared-assets-manifest.mjs`, and
+`scripts/fetch-shared-assets.mjs` (the original Wayback-fetch scripts described below) were never created —
+there was nothing left to download once the real source was found. Do not create them.
+
+- [ ] **Step 1: Verify the committed assets are real, valid images (not HTML error pages saved with an image
+  extension — this exact failure mode bit the first Wayback-fetch attempt, caused by curl not decoding the
+  Brotli `Content-Encoding` Wayback served)**
+
+Run: `file src/assets/shared/logo.png src/assets/shared/logo-icon.png src/assets/shared/footer-bg.jpg src/assets/shared/clients/client-01.png src/assets/shared/team/felipe.jpg src/assets/shared/brands/cisco.jpg`
+Expected: every file reports a real image type (`PNG image data`, `JPEG image data`, etc.), never `data` or `HTML document text`.
+
+Run: `find src/assets/shared -type f | wc -l`
+Expected: 118 (2 logo files + 1 footer-bg + 18 client logos + 8 team photos + 79 brand logos + 10 service photos — recount if this task is re-run with a different asset selection, don't treat 118 as sacred, just confirm it matches what you actually copied).
+
+- [ ] **Step 2: Commit (if not already committed by the controller)**
+
+```bash
+git add src/assets/shared
+git commit -m "Add real image assets recovered from the txuselo/redworks-web WordPress backup and project owner"
 ```
 
 ---
