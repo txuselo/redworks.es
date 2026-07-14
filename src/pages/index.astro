@@ -1,8 +1,106 @@
 ---
 export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import WhyChooseUs from '../components/WhyChooseUs.astro';
+import CtaBand from '../components/CtaBand.astro';
+import BrandsStrip from '../components/BrandsStrip.astro';
+
+const SERVICE_ICONS: Record<string, string> = {
+  'telefonia-voip': 'headset',
+  audiovisuales: 'network-wired',
+  videoconferencias: 'headset',
+  megafonia: 'bolt',
+  conferencias: 'network-wired',
+  'sistemas-informaticos': 'network-wired',
+  'redes-wifi': 'wifi',
+  seguridad: 'shield-alt',
+  electricidad: 'bolt',
+  paneles: 'sun',
+  'instalacion-electrica-de-baja-tension': 'bolt',
+};
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+const whyRedworks = [
+  {
+    icon: 'shield-alt',
+    title: 'Experiencia',
+    body: 'Más de 15 años de experiencia y un equipo certificado.',
+  },
+  {
+    icon: 'check-circle',
+    title: 'Resultados',
+    body: 'Profesionales especializados que cuidan cada detalle del proyecto.',
+  },
+  {
+    icon: 'headset',
+    title: 'Dedicación',
+    body: 'Soluciones a medida, adaptadas a lo que necesita tu negocio.',
+  },
+];
 ---
-<html lang="es">
-  <body>
-    <h1>Redworks Solutions</h1>
-  </body>
-</html>
+
+<Layout
+  title="Empresa Telecomunicaciones y Electricidad Madrid | Redworks"
+  description="Empresa Instaladora de Sistemas de Telecomunicaciones y Sistemas de Electricidad en Madrid. Más de 15 años de experiencia. 910 52 74 99"
+>
+  <Hero title="Telecomunicaciones y Electricidad en Madrid">
+    Más de 15 años instalando y manteniendo sistemas de telecomunicaciones, electricidad y energías
+    renovables para empresas en Madrid.
+  </Hero>
+
+  <section class="container services">
+    <h2>Nuestros servicios</h2>
+    <div class="grid">
+      {
+        services.map((service) => (
+          <a class="service-tile" href={`/${service.id}/`}>
+            <Icon name={SERVICE_ICONS[service.id] ?? 'check-circle'} />
+            <span>{service.data.navLabel}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <WhyChooseUs cards={whyRedworks} />
+  <CtaBand />
+  <BrandsStrip />
+</Layout>
+
+<style>
+  .services {
+    padding: 3rem 0;
+    text-align: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .service-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid #eee;
+    border-radius: var(--radius);
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .service-tile :global(svg) {
+    color: var(--color-primary);
+  }
+  .service-tile:hover {
+    border-color: var(--color-primary);
+    text-decoration: none;
+    background: var(--color-bg-alt);
+  }
+</style>

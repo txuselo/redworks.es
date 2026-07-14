@@ -1,0 +1,42 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import WhyChooseUs from '../components/WhyChooseUs.astro';
+import CtaBand from '../components/CtaBand.astro';
+import BrandsStrip from '../components/BrandsStrip.astro';
+
+interface Props {
+  entry: CollectionEntry<'services'>;
+}
+const { entry } = Astro.props;
+const { title, metaDescription, heroTitle, heroImage, sections, whyChooseUs } = entry.data;
+---
+
+<Layout title={`${title} | Redworks`} description={metaDescription}>
+  <Hero title={heroTitle} image={heroImage} />
+  {
+    sections.map((section) => (
+      <section class="content-section container">
+        <h2>{section.heading}</h2>
+        {section.body && <p>{section.body}</p>}
+        {section.image && <Image src={section.image} alt="" width={900} height={675} />}
+      </section>
+    ))
+  }
+  {whyChooseUs && whyChooseUs.length > 0 && <WhyChooseUs cards={whyChooseUs} />}
+  <CtaBand />
+  <BrandsStrip />
+</Layout>
+
+<style>
+  .content-section {
+    padding: 2rem 0;
+    max-width: 800px;
+  }
+  .content-section img {
+    margin-top: 1rem;
+    border-radius: var(--radius);
+  }
+</style>

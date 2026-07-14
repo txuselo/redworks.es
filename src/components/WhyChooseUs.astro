@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+
+interface Card {
+  icon: string;
+  title: string;
+  body: string;
+}
+interface Props {
+  cards: Card[];
+}
+const { cards } = Astro.props;
+---
+
+<section class="why container">
+  <h2>¿Por Qué Elegirnos?</h2>
+  <div class="cards">
+    {
+      cards.map((card) => (
+        <div class="card">
+          <Icon name={card.icon} />
+          <h3>{card.title}</h3>
+          <p>{card.body}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .why {
+    padding: 3rem 0;
+    text-align: center;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .card {
+    color: var(--color-primary);
+  }
+  .card h3,
+  .card p {
+    color: var(--color-text);
+  }
+</style>

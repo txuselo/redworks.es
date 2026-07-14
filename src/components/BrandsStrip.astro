@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+const brandImages = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/shared/brands/*.{png,jpg,jpeg}',
+  { eager: true }
+);
+// The recovered brand-logo set has ~80 real files; showing all of them makes every page feel
+// text/logo-heavy. Cap the strip at a clean two rows and keep the rest as recovered source material.
+const BRAND_LIMIT = 20;
+const brands = Object.values(brandImages)
+  .map((mod) => mod.default)
+  .slice(0, BRAND_LIMIT);
+---
+
+<section class="brands container">
+  <h2>Trabajamos con las mejores marcas</h2>
+  <div class="logos">
+    {brands.map((brand) => <Image src={brand} alt="" width={80} height={80} loading="lazy" />)}
+  </div>
+</section>
+
+<style>
+  .brands {
+    padding: 3rem 0;
+    text-align: center;
+  }
+  .logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  .logos img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.7;
+  }
+  .logos img:hover {
+    filter: none;
+    opacity: 1;
+  }
+</style>

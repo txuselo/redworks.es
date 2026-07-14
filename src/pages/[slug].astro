@@ -1,0 +1,21 @@
+---
+export const prerender = true;
+
+import { getCollection } from 'astro:content';
+import ServicePage from '../templates/ServicePage.astro';
+import PageTemplate from '../templates/PageTemplate.astro';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  const pages = await getCollection('pages');
+  return [
+    ...services.map((entry) => ({ params: { slug: entry.id }, props: { type: 'service' as const, entry } })),
+    ...pages.map((entry) => ({ params: { slug: entry.id }, props: { type: 'page' as const, entry } })),
+  ];
+}
+
+const { type, entry } = Astro.props;
+---
+
+{type === 'service' && <ServicePage entry={entry} />}
+{type === 'page' && <PageTemplate entry={entry} />}

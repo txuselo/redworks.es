@@ -1,4 +1,7 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/shared/logo.png';
+
 const SERVICES = [
   { label: "Telecomunicaciones", href: "/telecomunicaciones/" },
   { label: "Telefonía VoIP", href: "/telefonia-voip/" },
@@ -16,9 +19,11 @@ const SERVICES = [
 ---
 <header class="site-header">
   <div class="container bar">
-    <a href="/" class="logo">Redworks Solutions</a>
+    <a href="/" class="logo">
+      <Image src={logo} alt="Redworks Solutions" width={180} height={44} />
+    </a>
     <nav aria-label="Principal">
-      <ul>
+      <ul class="main-menu">
         <li class="has-dropdown">
           <span>Servicios</span>
           <ul class="dropdown">
@@ -38,9 +43,10 @@ const SERVICES = [
 <style>
   .site-header { border-bottom: 1px solid #eee; }
   .bar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; gap: 1rem; }
-  .logo { font-weight: 700; font-size: 1.25rem; color: var(--color-text); }
-  nav ul { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
-  nav > ul > li { position: relative; }
+  .logo { display: block; }
+  .logo img { display: block; height: 40px; width: auto; }
+  .main-menu { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+  .main-menu > li { position: relative; }
   .has-dropdown > span { cursor: default; font-weight: 600; }
   .dropdown {
     display: none;
