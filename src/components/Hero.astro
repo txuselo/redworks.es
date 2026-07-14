@@ -6,15 +6,16 @@ import NodePattern from './NodePattern.astro';
 interface Props {
   title: string;
   image?: ImageMetadata;
+  imageAlt?: string;
   eyebrow?: string;
   dark?: boolean;
 }
-const { title, image, eyebrow, dark = false } = Astro.props;
+const { title, image, imageAlt = '', eyebrow, dark = false } = Astro.props;
 ---
 
 <section class:list={['hero', { dark }]}>
   {dark && <NodePattern class="node-pattern" />}
-  {image && <Image src={image} alt="" class="hero-bg" width={1600} height={700} />}
+  {image && <Image src={image} alt={imageAlt} class="hero-bg" width={1600} height={700} />}
   <div class="container">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>

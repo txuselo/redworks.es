@@ -9,15 +9,25 @@ const brandImages = import.meta.glob<{ default: ImageMetadata }>(
 // The recovered brand-logo set has ~80 real files; showing all of them makes every page feel
 // text/logo-heavy. Cap the strip at a clean two rows and keep the rest as recovered source material.
 const BRAND_LIMIT = 20;
-const brands = Object.values(brandImages)
-  .map((mod) => mod.default)
+function brandName(path: string) {
+  const file = path.split('/').pop()?.replace(/\.(png|jpe?g)$/, '') ?? '';
+  return file
+    .replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+const brands = Object.entries(brandImages)
+  .map(([path, mod]) => ({ image: mod.default, name: brandName(path) }))
   .slice(0, BRAND_LIMIT);
 ---
 
 <section class="brands container">
   <h2>Trabajamos con las mejores marcas</h2>
   <div class="logos">
-    {brands.map((brand) => <Image src={brand} alt="" width={80} height={80} loading="lazy" />)}
+    {
+      brands.map((brand) => (
+        <Image src={brand.image} alt={`Logo de ${brand.name}, marca con la que trabaja Redworks Solutions`} width={80} height={80} loading="lazy" />
+      ))
+    }
   </div>
 </section>
 

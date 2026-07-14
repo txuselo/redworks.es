@@ -6,15 +6,56 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  /** Absolute image URL for social sharing previews. Defaults to the site logo. */
+  ogImage?: string;
+  /** 'article' for blog posts, 'website' for everything else (default). */
+  type?: 'website' | 'article';
+  /** Extra JSON-LD objects (Service, Article, FAQPage, BreadcrumbList...) to include alongside the sitewide Organization schema. */
+  schema?: Record<string, unknown>[];
 }
-const { title, description } = Astro.props;
+const { title, description, ogImage, type = 'website', schema = [] } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteName = 'Redworks Solutions';
+const resolvedOgImage = ogImage ?? new URL('/og-default.jpg', Astro.site).toString();
+
+const organizationSchema = {
+  '@type': 'LocalBusiness',
+  '@id': 'https://redworks.es/#organization',
+  name: siteName,
+  alternateName: 'Redworks',
+  url: 'https://redworks.es',
+  telephone: '+34910527499',
+  description:
+    'Empresa instaladora de sistemas de telecomunicaciones, electricidad y energías renovables en Madrid, con más de 15 años de experiencia.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Calle José Echegaray, 14, Edificio A2, planta 2, nave 8',
+    addressLocality: 'Alcobendas',
+    addressRegion: 'Madrid',
+    postalCode: '28100',
+    addressCountry: 'ES',
+  },
+  areaServed: {
+    '@type': 'City',
+    name: 'Madrid',
+  },
+  sameAs: ['https://www.instagram.com/redworksolutions/', 'https://es.linkedin.com/company/redworks-solutions'],
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [organizationSchema, ...schema],
+};
 ---
+
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,6 +64,20 @@ const { title, description } = Astro.props;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
     />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedOgImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <Header />

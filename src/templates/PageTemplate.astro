@@ -68,9 +68,35 @@ const services = entry.id === 'telecomunicaciones' ? await getCollection('servic
 const telecomServices = services
   .filter((s) => s.data.category === 'telecomunicaciones')
   .sort((a, b) => a.data.order - b.data.order);
+
+const pageUrl = new URL(`/${entry.id}/`, Astro.site).toString();
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: new URL('/', Astro.site).toString() },
+    { '@type': 'ListItem', position: 2, name: heroTitle, item: pageUrl },
+  ],
+};
+const aboutPageSchema =
+  entry.id === 'quienes-somos'
+    ? {
+        '@type': 'AboutPage',
+        url: pageUrl,
+        mainEntity: {
+          '@id': 'https://redworks.es/#organization',
+          employee: [...LEADERSHIP, ...TECHNICAL_TEAM].map((member) => ({
+            '@type': 'Person',
+            name: member.name,
+            jobTitle: 'role' in member ? member.role : member.specialty,
+            worksFor: { '@id': 'https://redworks.es/#organization' },
+          })),
+        },
+      }
+    : null;
+const pageSchema = aboutPageSchema ? [breadcrumbSchema, aboutPageSchema] : [breadcrumbSchema];
 ---
 
-<Layout title={title} description={metaDescription}>
+<Layout title={title} description={metaDescription} schema={pageSchema}>
   <Hero title={heroTitle}>
     <Content />
   </Hero>
@@ -119,8 +145,8 @@ const telecomServices = services
   {
     entry.id === 'clientes' && (
       <div class="container client-logos">
-        {clientLogos.map((logo) => (
-          <Image src={logo} alt="" width={120} height={120} loading="lazy" />
+        {clientLogos.map((logo, i) => (
+          <Image src={logo} alt={`Logo de empresa cliente de Redworks Solutions (${i + 1})`} width={120} height={120} loading="lazy" />
         ))}
       </div>
     )
