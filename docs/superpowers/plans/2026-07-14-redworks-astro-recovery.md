@@ -465,6 +465,16 @@ git commit -m "Add design tokens, base Layout, Header and Footer"
 
 ### Task 3: `services` content collection schema
 
+**⚠️ AMENDED DURING TASK 6 — read before implementing.** This schema was designed from a single fixture
+(electricidad). Running the real extraction against all 12 pages (Task 6) showed the site was redesigned at some
+point: only electricidad and telefonia-voip still have a 3-card "¿Por Qué Elegirnos?" block; the other 10 pages
+either have none at all, or (telecomunicaciones) are a hub/category page with a fundamentally different shape.
+`whyChooseUs` must be **optional** (`z.array(...).length(3).optional()`, not required), and `telecomunicaciones`
+was moved out of this collection entirely into the `pages` collection (Task 9) since it isn't a detail page. See
+Task 6's amendment note and Task 4's amendment note for the full diagnosis. If you're implementing this task
+fresh (rather than picking up mid-execution), skip straight to the amended schema and don't bother implementing
+the original mandatory-3-cards version first.
+
 **Files:**
 - Create: `src/content/config.ts`
 - Test: `src/content/config.test.ts`
@@ -619,6 +629,17 @@ git commit -m "Add services/pages content collection schemas"
 ---
 
 ### Task 4: Elementor service-page parser (extraction logic + fixture test)
+
+**⚠️ AMENDED DURING TASK 6 — read before implementing.** This parser was built and tested against exactly one
+fixture (electricidad). Real-data extraction (Task 6) found 9 of the other 11 pages use a different heading size
+class for prose sections (`h2.elementor-size-xl`, not `elementor-size-default`) and have no "why choose us" block
+at all, and that the `h2Large.text().includes('Por Qué Elegirnos')` check is case-sensitive and misses
+`telecomunicaciones`'s real "¿Por qué elegirnos?" (lowercase). The amended parser must: (1) also collect
+`h2.elementor-size-xl` sections the same way as `elementor-size-default` ones, (2) match the why-choose-us
+heading case-insensitively, (3) return however many why-choose-us cards actually exist (0 or 3 in practice, not
+always exactly 3) instead of assuming the section is always present. Add a second real fixture (a page using the
+newer template, e.g. `seguridad` or `audiovisuales`) alongside the existing `electricidad.html` one so the test
+suite covers both templates, not just the older one.
 
 **Files:**
 - Create: `scripts/parse-service-page.mjs`
