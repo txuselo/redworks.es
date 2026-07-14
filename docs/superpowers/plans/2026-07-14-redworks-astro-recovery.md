@@ -891,8 +891,18 @@ git commit -m "Add real image assets recovered from the txuselo/redworks-web Wor
 - Create: `src/content/services/*/hero.jpg` and `section-*.jpg` (generated images, one subfolder per service)
 
 **Interfaces:**
-- Consumes: `parseServicePage`, `mapIcon` (Task 4), `downloadImage` (Task 5).
+- Consumes: `parseServicePage`, `mapIcon` (Task 4).
 - Produces: 12 YAML files conforming exactly to the `services` schema from Task 3 — this is what Task 7's dynamic route reads via `getCollection('services')`.
+
+**⚠️ AMENDED DURING EXECUTION — image sourcing changed, read before Step 2.** Task 5 discovered Wayback never
+archived any images for this domain; the real source is the private repo `txuselo/redworks-web` (a WordPress
+backup, sparse-checked-out to `wp-content/uploads`). Text extraction still works exactly as originally designed
+(fetch the real Wayback HTML snapshot per the manifest below, run it through `parseServicePage`) — only the image
+step changes: instead of downloading `parsed.heroImage`/`section.imageSrc` from Wayback, resolve each one by
+filename against a local sparse clone of that backup, since the parser already extracts the real original
+filename from the `<img src>`/`og:image` URL (e.g. `.../wp-content/uploads/2021/10/electricidad-destacada.jpg` →
+`electricidad-destacada.jpg`) and that exact filename exists somewhere under the backup's `wp-content/uploads/`
+tree.
 
 - [ ] **Step 1: Write the services manifest (slug → category → nav order → Wayback URL)**
 
@@ -914,14 +924,69 @@ export const SERVICES_MANIFEST = [
 ];
 ```
 
-- [ ] **Step 2: Write the runner**
+- [ ] **Step 2: Get a local copy of the real image backup**
+
+Run (on the host, not in Docker — this is a plain git/gh operation, not a Node command):
+```bash
+git clone --filter=blob:none --no-checkout --depth 1 https://github.com/txuselo/redworks-web.git /tmp/redworks-web-backup
+cd /tmp/redworks-web-backup
+git sparse-checkout init --cone
+git sparse-checkout set wp-content/uploads
+git checkout
+cd -
+```
+This requires the project owner's own `gh`/git credentials (the repo is private) — if this fails with a
+permission/auth error, stop and report NEEDS_CONTEXT rather than fabricating placeholder images.
+
+- [ ] **Step 3: Write an image resolver plus the runner**
+
+`scripts/resolve-backup-image.mjs`:
+```js
+import { readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+
+const BACKUP_ROOT = '/tmp/redworks-web-backup/wp-content/uploads';
+
+function walk(dir) {
+  const entries = readdirSync(dir);
+  const files = [];
+  for (const entry of entries) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      files.push(...walk(full));
+    } else {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+let indexCache = null;
+function index() {
+  if (!indexCache) {
+    indexCache = new Map();
+    for (const path of walk(BACKUP_ROOT)) {
+      const name = path.split('/').pop();
+      if (!indexCache.has(name)) indexCache.set(name, path);
+    }
+  }
+  return indexCache;
+}
+
+export function resolveBackupImage(originalUrlOrPath) {
+  const filename = originalUrlOrPath.split('/').pop();
+  const found = index().get(filename);
+  if (!found) throw new Error(`Image "${filename}" not found anywhere under ${BACKUP_ROOT}`);
+  return found;
+}
+```
 
 `scripts/fetch-services.mjs`:
 ```js
-import { mkdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { stringify } from 'yaml';
 import { parseServicePage } from './parse-service-page.mjs';
-import { downloadImage } from './download-image.mjs';
+import { resolveBackupImage } from './resolve-backup-image.mjs';
 import { SERVICES_MANIFEST } from './services-manifest.mjs';
 
 for (const entry of SERVICES_MANIFEST) {
@@ -938,13 +1003,13 @@ for (const entry of SERVICES_MANIFEST) {
   const dir = `src/content/services/${entry.slug}`;
   await mkdir(dir, { recursive: true });
 
-  await downloadImage(`${waybackBase}${parsed.heroImage}`, `${dir}/hero.jpg`);
+  await copyFile(resolveBackupImage(parsed.heroImage), `${dir}/hero.jpg`);
 
   const sections = [];
   for (const [i, section] of parsed.sections.entries()) {
     const sectionData = { heading: section.heading, body: section.body };
     if (section.imageSrc) {
-      await downloadImage(`${waybackBase}${section.imageSrc}`, `${dir}/section-${i}.jpg`);
+      await copyFile(resolveBackupImage(section.imageSrc), `${dir}/section-${i}.jpg`);
       sectionData.image = `./${entry.slug}/section-${i}.jpg`;
     }
     sections.push(sectionData);
@@ -967,26 +1032,39 @@ for (const entry of SERVICES_MANIFEST) {
 }
 ```
 
-- [ ] **Step 3: Run the extraction**
+Note: `hero.jpg`/`section-N.jpg` are fixed extensions for simplicity, but a handful of real files in the backup
+are `.png` (rare for hero photos, common for the odd icon-style image) — if `resolveBackupImage` finds a `.png`
+source, still write it to the `.jpg`-named destination (`copyFile` doesn't care about extension mismatch; Astro's
+`image()` schema helper identifies format from file *content*, not extension, so this doesn't break anything, but
+if it feels wrong, rename the destination extension to match instead — implementer's judgment call).
+
+- [ ] **Step 4: Run the extraction**
 
 Run: `docker compose run --rm app npm run extract:services`
-Expected: 12 lines of `Fetching ...` / `Wrote ...`, no thrown errors.
+Expected: 12 lines of `Fetching ...` / `Wrote ...`, no thrown errors. If a specific image filename can't be found
+in the backup (`resolveBackupImage` throws), that page's real hero/section photo genuinely isn't in the 2021
+backup (it may have been added to the site after Dec 2021) — check `src/assets/shared/services/` (Task 5 already
+staged a few real per-service photos found via a different route: `electricidad-destacada.jpg`,
+`placas-fotovoltaicas-destacada.jpg`, `proyectos-baja-tension-destacada.jpg`, `videoconferencia01.jpg`,
+`seguridad03-redworks.jpg`, `sistema-wifi03.jpg`, `portada-megafonia.jpg`, `portada-audiovisuales.jpg`,
+`portada-sistemas-informaticos.jpg`, `telefonia-1.jpg`) for a same-topic substitute before falling back to
+reporting DONE_WITH_CONCERNS for that one slug.
 
-- [ ] **Step 4: Sanity-check the generated content by hand for one file**
+- [ ] **Step 5: Sanity-check the generated content by hand for one file**
 
 Run: `cat src/content/services/electricidad.yaml`
-Expected: `heroTitle` reads "Empresa Instaladora de Electricidad y Energías Renovables en Madrid", `sections` has exactly 2 entries ("Electricidad", "Energía Renovable"), `whyChooseUs` has exactly 3 entries. This must match the values already verified in Task 4's fixture test — if it doesn't, the live snapshot at this timestamp drifted from the fixture; re-run Step 1 of Task 4 with the current timestamp and diff.
+Expected: `heroTitle` reads "Empresa Instaladora de Electricidad y Energías Renovables en Madrid", `sections` has exactly 2 entries ("Electricidad", "Energía Renovable"), `whyChooseUs` has exactly 3 entries. This must match the values already verified in Task 4's fixture test — if it doesn't, the live snapshot at this timestamp drifted from the fixture; re-run Step 1 of Task 4 with the current timestamp and diff. Also check `heroImage`/section `image` fields point at real files: `file src/content/services/electricidad/*.jpg` should report genuine `JPEG image data`, never `data` or an HTML page.
 
-- [ ] **Step 5: Verify the build accepts all 12 generated files against the Task 3 schema**
+- [ ] **Step 6: Verify the build accepts all 12 generated files against the Task 3 schema**
 
 Run: `docker compose run --rm app npm run build`
 Expected: build succeeds with no `[content-schema]` errors. If a specific field fails validation (e.g. a page had 4 why-choose-us cards instead of 3, or a missing image), fix that one YAML file or re-run the extraction for that slug — do not loosen the schema to accommodate bad data.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add scripts/services-manifest.mjs scripts/fetch-services.mjs src/content/services
-git commit -m "Extract and commit content for all 12 service pages from Wayback Machine"
+git add scripts/services-manifest.mjs scripts/fetch-services.mjs scripts/resolve-backup-image.mjs src/content/services
+git commit -m "Extract and commit content for all 12 service pages, images from the real WordPress backup"
 ```
 
 ---
